@@ -1,0 +1,7 @@
+{
+  "itemDisplayName": "Deploy a Windows VM Scale Set with managed disks based on custom image",
+  "description": "This template allows you to deploy a VM Scale Set with managed disk based on custom image. Windows and Linux vhd is supported.",
+  "summary": "This template allows you to deploy a VM Scale Set with managed disk based on custom image. Windows and Linux vhd is supported. ",
+  "githubUsername": "jjindrich",
+  "dateUpdated": "2017-05-16"
+}
