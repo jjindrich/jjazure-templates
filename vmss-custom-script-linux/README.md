@@ -7,6 +7,7 @@
 This template allows you to deploy a VM Scale Set of Linux VMs with a custom script run on each VM. To connect from the load balancer to a VM in the scale set, you would go to the Azure Portal, find the load balancer of your scale set, examine the NAT rules, then connect using the NAT rule you want. For example, if there is a NAT rule on port 50000, you could SSH on port 50000 of the public IP to connect to that VM:
 
 Sample custom script install Mindnight Commander and simple Docker container with web server.
+You can try to access ssh session on ports beginning 50000. Web app is running on load balanced port 80.
 
 If you want to manage Docker it's much easier with <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/linux/dockerextension">Azure Docker VM Extension</a>.
 
