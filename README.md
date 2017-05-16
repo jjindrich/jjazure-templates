@@ -15,6 +15,8 @@ For example:
 ### PowerShell
 ```PowerShell
 .\Deploy-AzureResourceGroup.ps1 -ResourceGroupLocation 'eastus' -ArtifactStagingDirectory '[foldername]'
+or
+.\Deploy-AzureResourceGroup.ps1 -ResourceGroupLocation 'eastus' -ArtifactStagingDirectory '[foldername]' -ResourceGroup 'mygroup'
 ```
 ### Bash
 
