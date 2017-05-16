@@ -3,13 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
 	"adminUsername": {
-	    "value": "azureuser"
+	    "value": "jj"
 	},
 	"adminPassword": {
-	    "value": "GEN-PASSWORD"
+	    "value": "Azure-1234512345"
 	},
 	"vmssName": {
-	    "value": "GEN-UNIQUE-8"
+	    "value": "jjvmsstest"
 	}
     }
 }

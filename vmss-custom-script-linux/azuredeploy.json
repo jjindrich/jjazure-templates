@@ -136,18 +136,16 @@
               {
                 "name": "customScript",
                 "properties": {
-                  "publisher": "Microsoft.Compute",
+                  "publisher": "Microsoft.Azure.Extensions",
+                  "type": "CustomScript",
+                  "typeHandlerVersion": "2.0",
+                  "autoUpgradeMinorVersion": true,
                   "settings": {
                     "fileUris": [
                       "[concat(parameters('_artifactsLocation'), '/scripts/hello.sh')]"
-                    ]
-                  },
-                  "typeHandlerVersion": "1.8",
-                  "autoUpgradeMinorVersion": true,
-                  "protectedSettings": {
-                    "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File helloWorld.ps1"
-                  },
-                  "type": "CustomScriptExtension"
+                    ],
+                    "commandToExecute": "sh hello.sh"
+                  }
                 }
               }
             ]

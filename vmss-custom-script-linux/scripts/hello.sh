@@ -1,1 +1,1 @@
-echo JJ
+apt-get -y update && apt-get install -y mc
