@@ -90,9 +90,9 @@
 		"caching": "ReadWrite"
             },
             "imageReference": {
-              "publisher": "MicrosoftWindowsServer",
-              "offer": "WindowsServer",
-              "sku": "2016-Datacenter",
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "14.04.4-LTS",
               "version": "latest"
             }
           },
@@ -139,7 +139,7 @@
                   "publisher": "Microsoft.Compute",
                   "settings": {
                     "fileUris": [
-                      "[concat(parameters('_artifactsLocation'), '/scripts/helloWorld.ps1')]"
+                      "[concat(parameters('_artifactsLocation'), '/scripts/hello.sh')]"
                     ]
                   },
                   "typeHandlerVersion": "1.8",
@@ -254,7 +254,7 @@
               "protocol": "tcp",
               "frontendPortRangeStart": "50000",
               "frontendPortRangeEnd": "50019",
-              "backendPort": "3389"
+              "backendPort": "22"
             }
           }
         ]
