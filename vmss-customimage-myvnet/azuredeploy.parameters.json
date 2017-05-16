@@ -15,7 +15,7 @@
       "value": "https://jjlinuxstorage.blob.core.windows.net/vhds/jjlinux20170504070348.vhd"
     },
     "adminPassword": {
-      "value": "Azure-1234512345"
+      "value": "GEN-PASS"
     },
     "virtualNetworkResourceGroup": {
       "value": "test"

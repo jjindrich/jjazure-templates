@@ -6,7 +6,7 @@
 	    "value": "jj"
 	},
 	"adminPassword": {
-	    "value": "Azure-1234512345"
+	    "value": "GEN-PASS"
 	},
 	"vmssName": {
 	    "value": "jjvmsstest"
