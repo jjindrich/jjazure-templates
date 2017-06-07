@@ -2,6 +2,12 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "sourceImage": {
+      "value": "jjdevv2linuxweb-image"
+    },
+    "sourceImageResourceGroup": {
+      "value": "jjdevv2-VM-WebLinux"
+    },
     "vmssName": {
       "value": "jjli"
     },
@@ -10,9 +16,6 @@
     },
     "adminUsername": {
       "value": "jj"
-    },
-    "sourceImageVhdUri": {
-      "value": "https://jjlinuxstorage.blob.core.windows.net/vhds/jjlinux20170504070348.vhd"
     },
     "adminPassword": {
       "value": "GEN-PASS"
@@ -25,9 +28,6 @@
     },
     "virtualNetworkSubnetName": {
       "value": "default"
-    },
-    "osType": {
-      "value": "Linux"
     }
   }
 }

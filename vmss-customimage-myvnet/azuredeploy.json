@@ -2,16 +2,23 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "vmSize": {
-      "type": "string",
-      "defaultValue": "Standard_F4S",
-      "minLength": 1
-    },
     "sourceImage": {
       "type": "string",
       "metadata": {
-        "description": "The source of the blob containing the custom image"
+        "description": "Name of custom image"
       },
+      "minLength": 1
+    },
+    "sourceImageResourceGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "Resource group name with custom image"
+      },
+      "minLength": 1
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_F4S",
       "minLength": 1
     },
     "vmssName": {
@@ -56,7 +63,6 @@
   "variables": {
     "location": "[resourceGroup().location]",
     "longNamingInfix": "[toLower(parameters('vmssName'))]",
-    "imageName": "[parameters('sourceImage')]",
     "namingInfix": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]",
     "virtualNetworkId": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
     "publicIPAddressName": "[concat(variables('namingInfix'), 'pip')]",
@@ -137,7 +143,6 @@
         "displayName": "VMScaleSet"
       },
       "dependsOn": [
-        "[concat('Microsoft.Compute/images/', variables('imageName'))]",
         "[variables('lbID')]"
       ],
       "sku": {
@@ -153,7 +158,7 @@
         "virtualMachineProfile": {
           "storageProfile": {
             "imageReference": {
-              "id": "[resourceId('Microsoft.Compute/images', variables('imageName'))]"
+              "id": "[resourceId(parameters('sourceImageResourceGroup'),'Microsoft.Compute/images', parameters('sourceImage'))]"
             }
           },
           "osProfile": {
