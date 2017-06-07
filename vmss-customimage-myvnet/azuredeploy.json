@@ -159,7 +159,15 @@
           "storageProfile": {
             "imageReference": {
               "id": "[resourceId(parameters('sourceImageResourceGroup'),'Microsoft.Compute/images', parameters('sourceImage'))]"
-            }
+            },
+            "dataDisks": [
+                {
+                "lun": 1,
+                "createOption": "Empty",
+                "caching": "ReadOnly",
+                "diskSizeGB": 50
+                }
+            ]
           },
           "osProfile": {
             "computerNamePrefix": "[variables('namingInfix')]",

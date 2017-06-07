@@ -3,10 +3,10 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "sourceImage": {
-      "value": "jjdevv2linuxweb-image"
+      "value": "jjlinux-image"
     },
     "sourceImageResourceGroup": {
-      "value": "jjdevv2-VM-WebLinux"
+      "value": "jjtestlinux"
     },
     "vmssName": {
       "value": "jjli"
