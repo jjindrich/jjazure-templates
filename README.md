@@ -23,7 +23,7 @@ or
 Please ensure that you have [node and npm](https://docs.npmjs.com/getting-started/installing-node), [jq](https://stedolan.github.io/jq/download/) and [azure-cli](https://docs.microsoft.com/en-us/azure/cli-install-nodejs) installed.
 
 ```bash
-./azure-group-deploy.sh -a [foldername] -l eastus
+./az-group-deploy.sh -a [foldername] -l eastus
 ```
 
 - If you see the following error: "syntax error near unexpected token `$'in\r''", run this command: 'dos2unix azure-group-deploy.sh'.
