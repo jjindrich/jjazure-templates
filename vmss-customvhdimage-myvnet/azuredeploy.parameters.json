@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmssName": {
+      "value": "jjli"
+    },
+    "instanceCount": {
+      "value": 5
+    },
+    "adminUsername": {
+      "value": "jj"
+    },
+    "sourceImageVhdUri": {
+      "value": "https://jjlinuxstorage.blob.core.windows.net/vhds/jjlinux20170504070348.vhd"
+    },
+    "adminPassword": {
+      "value": "GEN-PASS"
+    },
+    "virtualNetworkResourceGroup": {
+      "value": "test"
+    },
+    "virtualNetworkName": {
+      "value": "test-vnet"
+    },
+    "virtualNetworkSubnetName": {
+      "value": "default"
+    },
+    "osType": {
+      "value": "Linux"
+    }
+  }
+}

@@ -7,7 +7,7 @@
       "defaultValue": "Standard_F4S",
       "minLength": 1
     },
-    "sourceImage": {
+    "sourceImageVhdUri": {
       "type": "string",
       "metadata": {
         "description": "The source of the blob containing the custom image"
@@ -51,12 +51,16 @@
     },
     "virtualNetworkSubnetName": {
       "type": "string"
+    },
+    "osType": {
+      "type": "string",
+      "allowedValues": [ "Windows", "Linux" ]
     }
   },
   "variables": {
     "location": "[resourceGroup().location]",
     "longNamingInfix": "[toLower(parameters('vmssName'))]",
-    "imageName": "[parameters('sourceImage')]",
+    "imageName": "[concat(variables('namingInfix'), 'img')]",
     "namingInfix": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]",
     "virtualNetworkId": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
     "publicIPAddressName": "[concat(variables('namingInfix'), 'pip')]",
@@ -70,6 +74,23 @@
     "frontEndIPConfigID": "[concat(variables('lbID'), '/frontendIPConfigurations/loadBalancerFrontEnd')]"
   },
   "resources": [
+    {
+      "type": "Microsoft.Compute/images",
+      "apiVersion": "2016-04-30-preview",
+      "name": "[variables('imageName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "storageProfile": {
+          "osDisk": {
+            "osType": "[parameters('osType')]",
+            "osState": "Generalized",
+            "blobUri": "[parameters('sourceImageVhdUri')]",
+            "caching": "ReadWrite",
+            "storageAccountType": "Standard_LRS"
+          }
+        }
+      }
+    },
     {
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('publicIPAddressName')]",
