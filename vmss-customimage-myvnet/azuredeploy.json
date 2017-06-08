@@ -224,7 +224,7 @@
                     "fileUris": [
                       "[concat(parameters('_artifactsLocation'), '/scripts/disks.sh')]"
                     ],
-                    "commandToExecute": "sh hello.sh"
+                    "commandToExecute": "sh disks.sh"
                   }
                 }
               }
