@@ -10,7 +10,7 @@ This template allows you to deploy a VM Scale Set of Linux VMs with a custom scr
 Sample custom script install Mindnight Commander and simple Docker container with web server.
 You can try to access ssh session on ports beginning 50000. Web app is running on load balanced port 80.
 
-If you want to manage Docker it's much easier with <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/linux/dockerextension">Azure Docker VM Extension</a>.
+If you want to manage Docker it's much easier use vmss-docker project or with <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/linux/dockerextension">Azure Docker VM Extension</a>.
 
 ## Enabled monitoring
 Template contains monitoring connected to OMS workspace (parameter OmsWorkspacename). You can monitor and analyse logs with log search.
