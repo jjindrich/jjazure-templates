@@ -9,6 +9,9 @@ Prerequisities:
 
 This project is base on this <a href="https://github.com/Azure/azure-quickstart-templates/tree/master/rds-deployment">article</a>.
 
+Script is using Powershell DSC script from link above - configuration of RDS roles.
+(There no loadbalancers used).
+
 ## Deploy RD gateway
 Use following ARM template.
 ```
@@ -39,4 +42,8 @@ Parameters needed: (azuredeploy-vm-cb.parameters.json)
 3. Number of hosts to deploy
 4. public IP parameters
 
-
+## Test access
+If you will use my settings, you can start browser with
+```
+https://gateway.jjdev.local/RDWeb
+```
