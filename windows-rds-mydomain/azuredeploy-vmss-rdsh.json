@@ -60,7 +60,8 @@
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
     "imageSKU": "2016-Datacenter",
-    "vmssName": "rdshx"
+    "vmssName": "rdsh",
+    "computerName": "rdsh-"
   },
   "resources": [
     {
@@ -96,7 +97,7 @@
             }
           },
           "osProfile": {
-            "computerNamePrefix": "[variables('vmssName')]",
+            "computerNamePrefix": "[variables('computerName')]",
             "adminUsername": "[parameters('adminUsername')]",
             "adminPassword": "[parameters('adminPassword')]"
           },

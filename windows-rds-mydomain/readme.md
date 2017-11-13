@@ -30,6 +30,17 @@ Parameters needed: (azuredeploy-vm.parameters.json)
 2. Active Domain administrator account
 3. Number of hosts to deploy
 
+## Deploy RDS Session hosts with VMSS
+This template is using Virtual Machine Scale Set.
+```
+azuredeploy-vmss-rdsh.json
+```
+
+On host run this command to add host in group
+```powershell
+Add-RDSessionHost -CollectionName "Desktop Collection" -SessionHost rdshx000000.jjdev.local -ConnectionBroker broker.jjdev.local
+```
+
 ## Deploy RD Connection Brokes
 Use following ARM template.
 ```
