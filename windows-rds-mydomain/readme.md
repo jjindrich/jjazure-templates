@@ -9,8 +9,7 @@ Prerequisities:
 
 This project is base on this <a href="https://github.com/Azure/azure-quickstart-templates/tree/master/rds-deployment">article</a>.
 
-Script is using Powershell DSC script from link above - configuration of RDS roles.
-(There no loadbalancers used).
+Script is using Powershell DSC script from link above - configuration of RDS roles (copy in configuration folder).
 
 ## Deploy RD gateway
 Use following ARM template.
