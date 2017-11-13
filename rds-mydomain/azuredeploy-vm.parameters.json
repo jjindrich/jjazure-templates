@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "virtualNetworkResourceGroup": {
+        "value": "JJDevV2-Infra"
+      },
+      "virtualNetworkName": {
+        "value": "JJDevV2Network"
+      },
+      "virtualNetworkSubnetName": {
+        "value": "DmzInfra"
+      },
+      "adminUsername": {
+        "value": "jj"
+      },
+      "adminPassword": {
+        "value": "Azure-1234567890"
+      },
+      "adDomainName": {
+        "value": "jjdev.local"
+      },
+      "adAdminUsername": {
+        "value": "jj"
+      },
+      "adAdminPassword": {
+        "value": "azure-123"
+      }
+    }
+  }
