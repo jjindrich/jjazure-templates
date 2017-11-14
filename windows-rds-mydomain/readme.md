@@ -45,8 +45,8 @@ Parameters needed: (azuredeploy-vm.parameters.json)
 
 On host run this command to add host in deployment and collection (broker must be deployed first)
 ```powershell
-Add-RDServer -Server rdshx000009.jjdev.local -Role "RDS-RD-SERVER" -ConnectionBroker broker.jjdev.local
-Add-RDSessionHost -CollectionName "Desktop Collection" -SessionHost rdshx000009.jjdev.local -ConnectionBroker broker.jjdev.local
+Add-RDServer -Server rdsh-000001.jjdev.local -Role "RDS-RD-SERVER" -ConnectionBroker broker.jjdev.local
+Add-RDSessionHost -CollectionName "Desktop Collection" -SessionHost rdsh-000001.jjdev.local -ConnectionBroker broker.jjdev.local
 ```
 
 ## Deploy RD Connection Broker
