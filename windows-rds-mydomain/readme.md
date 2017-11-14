@@ -21,6 +21,9 @@ Parameters needed: (azuredeploy-vm.parameters.json)
 2. Active Domain administrator account
 
 ## Deploy RD Session hosts
+There are two templates how to deploy RD Session hosts. 
+
+### Deploy RD Session hosts as VMs
 Use following ARM template.
 ```
 azuredeploy-vm-rdsh.json
@@ -30,15 +33,20 @@ Parameters needed: (azuredeploy-vm.parameters.json)
 2. Active Domain administrator account
 3. Number of hosts to deploy
 
-## Deploy RDS Session hosts with VMSS
+### Deploy RDS Session hosts as VMSS
 This template is using Virtual Machine Scale Set.
 ```
 azuredeploy-vmss-rdsh.json
 ```
+Parameters needed: (azuredeploy-vm.parameters.json)
+1. reference to Vnet
+2. Active Domain administrator account
+3. Number of instances in VMSS
 
-On host run this command to add host in group
+On host run this command to add host in deployment and collection
 ```powershell
-Add-RDSessionHost -CollectionName "Desktop Collection" -SessionHost rdshx000000.jjdev.local -ConnectionBroker broker.jjdev.local
+Add-RDServer -Server rdshx000009.jjdev.local -Role "RDS-RD-SERVER" -ConnectionBroker broker.jjdev.local
+Add-RDSessionHost -CollectionName "Desktop Collection" -SessionHost rdshx000009.jjdev.local -ConnectionBroker broker.jjdev.local
 ```
 
 ## Deploy RD Connection Brokes
