@@ -55,9 +55,8 @@
     }
   },
   "variables": {
-    "virtualNetworkId": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
-    //"assetLocation": "https://raw.githubusercontent.com/Azure/azure-QuickStart-Templates/master/rds-deployment/",
-    "assetLocation": "https://raw.githubusercontent.com/jjindrich/jjazure-templates/master/windows-rds-mydomain/",
+    "virtualNetworkId": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",    
+    "assetLocation": "https://raw.githubusercontent.com/jjindrich/jjazure-templates/master/windows-rds-mydomain/",                      
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
     "imageSKU": "2016-Datacenter",
@@ -134,7 +133,7 @@
                   "autoUpgradeMinorVersion": true,
                   "settings": {
                     "ModulesUrl": "[concat(variables('assetLocation'),'/Configuration.zip')]",
-                    "ConfigurationFunction": "Configuration.ps1\\SessionHost",
+                    "ConfigurationFunction": "configuration.ps1\\SessionHost",
                     "Properties": {
                       "DomainName": "[parameters('adDomainName')]",
                       "AdminCreds": {
