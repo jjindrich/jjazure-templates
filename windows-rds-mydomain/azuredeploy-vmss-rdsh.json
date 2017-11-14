@@ -132,7 +132,7 @@
                   "typeHandlerVersion": "2.11",
                   "autoUpgradeMinorVersion": true,
                   "settings": {
-                    "ModulesUrl": "[concat(variables('assetLocation'),'/Configuration.zip')]",
+                    "ModulesUrl": "[concat(variables('assetLocation'),'/configuration.zip')]",
                     "ConfigurationFunction": "configuration.ps1\\SessionHost",
                     "Properties": {
                       "DomainName": "[parameters('adDomainName')]",
