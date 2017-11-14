@@ -133,7 +133,7 @@
                   "autoUpgradeMinorVersion": true,
                   "settings": {
                     "ModulesUrl": "[concat(variables('assetLocation'),'/Configuration.zip')]",
-                    "ConfigurationFunction": "configuration.ps1\\SessionHost",
+                    "ConfigurationFunction": "Configuration.ps1\\SessionHost",
                     "Properties": {
                       "DomainName": "[parameters('adDomainName')]",
                       "AdminCreds": {
