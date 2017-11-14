@@ -43,13 +43,13 @@ Parameters needed: (azuredeploy-vm.parameters.json)
 2. Active Domain administrator account
 3. Number of instances in VMSS
 
-On host run this command to add host in deployment and collection
+On host run this command to add host in deployment and collection (broker must be deployed first)
 ```powershell
 Add-RDServer -Server rdshx000009.jjdev.local -Role "RDS-RD-SERVER" -ConnectionBroker broker.jjdev.local
 Add-RDSessionHost -CollectionName "Desktop Collection" -SessionHost rdshx000009.jjdev.local -ConnectionBroker broker.jjdev.local
 ```
 
-## Deploy RD Connection Brokes
+## Deploy RD Connection Broker
 Use following ARM template.
 ```
 azuredeploy-vm-cb.json
