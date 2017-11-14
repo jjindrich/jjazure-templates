@@ -56,7 +56,7 @@
   },
   "variables": {
     "virtualNetworkId": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",    
-    "assetLocation": "https://raw.githubusercontent.com/jjindrich/jjazure-templates/master/windows-rds-mydomain/",
+    "assetLocation": "https://raw.githubusercontent.com/Azure/azure-QuickStart-Templates/master/rds-deployment/",
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
     "imageSKU": "2016-Datacenter",
