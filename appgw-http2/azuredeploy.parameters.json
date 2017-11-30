@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "appGatewayName": {
+        "value": "jjappgw"
+      },
+      "appGatewaySkuName": {
+        "value": "Standard_Small"
+      },
+      "appGatewayCapacity": {
+        "value": 2
+      },
+      "publicIPAddressName": {
+        "value": "jjappgw-ip"
+      },
+      "backendIpAddress1": {
+        "value": "www.bing.com"
+      },
+      "virtualNetworkName": {
+        "value": "jjappgw-vnet"
+      },
+      "virtualNetworkSubnetName": {
+        "value": "jjappgw-vnet-default"
+      },
+      "virtualNetworkAddressPrefix": {
+        "value": "10.0.0.0/16"
+      },
+      "virtualNetworkSubnetPrefix": {
+        "value": "10.0.0.1/24"
+      }
+    }
+  }
