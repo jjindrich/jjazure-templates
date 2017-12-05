@@ -2,8 +2,15 @@
 
 ## Deploy AppGW with HTTP/2
 Use template to deploy Application Gateway.
+Template is using certificate stored in certificates folder.
 
-Create new HTTPS listener and rule for HTTPS manually. Use attached certificates.
+!!! Any changes not allowed in portal because of preview feature !!!
+
+Export certificate to base-64
+```powershell
+[System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes("appgw-http2\certificates\cert.pfx")) > "cert.txt"
+```
+[Sample template AppGw] https://github.com/Azure/azure-quickstart-templates/tree/master/201-application-gateway-2vms-iis-ssl
 
 ## Windows Virtual Machine with HTTP/2
 Run Windows2016 server and configure it to enable http/2.

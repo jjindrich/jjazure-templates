@@ -1,33 +1,42 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-      "appGatewayName": {
-        "value": "jjappgw"
-      },
-      "appGatewaySkuName": {
-        "value": "Standard_Small"
-      },
-      "appGatewayCapacity": {
-        "value": 2
-      },
-      "publicIPAddressName": {
-        "value": "jjappgw-ip"
-      },
-      "backendIpAddress1": {
-        "value": "www.bing.com"
-      },
-      "virtualNetworkName": {
-        "value": "jjappgw-vnet"
-      },
-      "virtualNetworkSubnetName": {
-        "value": "jjappgw-vnet-default"
-      },
-      "virtualNetworkAddressPrefix": {
-        "value": "10.0.0.0/16"
-      },
-      "virtualNetworkSubnetPrefix": {
-        "value": "10.0.0.1/24"
-      }
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appGatewayName": {
+      "value": "jjappgw"
+    },
+    "appGatewaySkuName": {
+      "value": "Standard_Small"
+    },
+    "appGatewayCapacity": {
+      "value": 2
+    },
+    "publicIPAddressName": {
+      "value": "jjappgw-ip"
+    },
+    "backendIpAddress1": {
+      "value": "52.233.192.165"
+    },
+    "certData": {
+      "value": "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"
+    },
+    "certPassword": {
+      "value": "azure-123"
+    },
+    "certPublicKeyData": {
+      "value": "MIICzDCCAbSgAwIBAgIQYgRUk3O1krNM7jn1+HZIYjANBgkqhkiG9w0BAQsFADAPMQ0wCwYDVQQDEwRqanZtMB4XDTE3MTEyOTE1MzEyOFoXDTE4MTEyOTAwMDAwMFowDzENMAsGA1UEAxMEamp2bTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKNJH93nGAt9NC1zxKvv5lDGN8kcruj52g0gFDY8nxcmRmxW6XMIFxwMymwgLCDi4n26XfL6I9OUIKpMkrbEzosUtzyiT7stE5texCR02g6N0jKEhpB/NPWgn6W3R5U8tKkp0HUIyWnkaUGQUkGI06wzbEYoCKv1XMgBzTcqXODh0+UcJZ4fPB3qml+G4YDgWg/CAtCliIxF/Qw03OZdNKV6CUBNql2Oii3kaM6BfFzOgtaLIse6QWV/PBeDPMsOHnPa3Q5ZtIJ7cSoDpn9HxG/C6LrnIfIN3SLfpcGJoXXw7rl7PPv+zqug5GHNQ8Iv13RRsy/lEGKvW+bmVYtUZ+sCAwEAAaMkMCIwCwYDVR0PBAQDAgQwMBMGA1UdJQQMMAoGCCsGAQUFBwMBMA0GCSqGSIb3DQEBCwUAA4IBAQAubvw6w5qKmk8WB5TENHZiNzq+r35kPEeLibPG7SqTBRB+/GXGpXH+CCbABcbO8SRyZ7o04acbRd5YbHbBRl8l4xr924RsiewI3E92q271cZNZePvRx7o230tQYqpUdwDZfdIOblYEY0J+/5nzAyxGEK+0Dc9YWV8Qj6HArF4t0Msh475J2XuyAas9kgAILW2B5utJi6LFbzVo+1v84m9qM6IymmZ7RCDbXqRoV67mJZPtomCGSvBSrKl5D+gnz8eDf4OUsfPxAbA3q/Ka9yy+YlfUWIzUQjn42i/LAM1xjQofw2opVa+ziuu90RmWOndnqkFwmy78OItfsiqWBy5G"
+    },
+    "virtualNetworkName": {
+      "value": "jjappgw-vnet"
+    },
+    "virtualNetworkSubnetName": {
+      "value": "jjappgw-vnet-default"
+    },
+    "virtualNetworkAddressPrefix": {
+      "value": "10.0.0.0/16"
+    },
+    "virtualNetworkSubnetPrefix": {
+      "value": "10.0.0.1/24"
     }
   }
+}

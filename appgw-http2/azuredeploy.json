@@ -40,6 +40,24 @@
         "description": "IP Address for Backend Server 1"
       }
     },
+    "certData": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Base-64 encoded form of the .pfx file"
+      }
+    },
+    "certPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password for .pfx certificate"
+      }
+    },
+    "certPublicKeyData": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Base-64 encoded form of the .cer file. This is the public key for the cert on the web servers."
+      }
+    },
     "virtualNetworkName": {
       "type": "string",
       "metadata": {
@@ -128,6 +146,23 @@
             }
           }
         ],
+        "sslCertificates": [
+          {
+            "name": "cert",
+            "properties": {
+              "data": "[parameters('certData')]",
+              "password": "[parameters('certPassword')]"
+            }
+          }
+        ],
+        "authenticationCertificates": [
+          {
+            "properties": {
+              "data": "[parameters('certPublicKeyData')]"
+            },
+            "name": "cert"
+          }
+        ],
         "frontendIPConfigurations": [
           {
             "name": "appGatewayFrontendIP",
@@ -140,9 +175,15 @@
         ],
         "frontendPorts": [
           {
-            "name": "appGatewayFrontendPort",
+            "name": "http",
             "properties": {
               "Port": 80
+            }
+          },
+          {
+            "name": "https",
+            "properties": {
+              "port": 443
             }
           }
         ],
@@ -160,42 +201,86 @@
         ],
         "backendHttpSettingsCollection": [
           {
-            "name": "appGatewayBackendHttpSettings",
+            "name": "http",
             "properties": {
               "Port": 80,
               "Protocol": "Http",
               "CookieBasedAffinity": "Disabled"
             }
+          },
+          {
+            "name": "https",
+            "properties": {
+              "Port": 443,
+              "Protocol": "Https",
+              "CookieBasedAffinity": "Disabled",
+              "AuthenticationCertificates": [
+                {
+                  "Id": "[concat(variables('applicationGatewayID'), '/authenticationCertificates/cert')]"
+                }
+              ]
+            }
           }
         ],
         "httpListeners": [
           {
-            "name": "appGatewayHttpListener",
+            "name": "http",
             "properties": {
               "FrontendIPConfiguration": {
                 "Id": "[concat(variables('applicationGatewayID'), '/frontendIPConfigurations/appGatewayFrontendIP')]"
               },
               "FrontendPort": {
-                "Id": "[concat(variables('applicationGatewayID'), '/frontendPorts/appGatewayFrontendPort')]"
+                "Id": "[concat(variables('applicationGatewayID'), '/frontendPorts/http')]"
               },
               "Protocol": "Http",
               "SslCertificate": null
+            }
+          },
+          {
+            "name": "https",
+            "properties": {
+              "frontendIPConfiguration": {
+                "Id": "[concat(variables('applicationGatewayID'), '/frontendIPConfigurations/appGatewayFrontendIP')]"
+              },
+              "frontendPort": {
+                "Id": "[concat(variables('applicationGatewayID'), '/frontendPorts/https')]"
+              },
+              "protocol": "Https",
+              "sslCertificate": {
+                "Id": "[concat(variables('applicationGatewayID'), '/sslCertificates/cert')]"
+              },
+              "requireServerNameIndication": false
             }
           }
         ],
         "requestRoutingRules": [
           {
-            "Name": "rule1",
+            "Name": "httpRule",
             "properties": {
               "RuleType": "Basic",
               "httpListener": {
-                "id": "[concat(variables('applicationGatewayID'), '/httpListeners/appGatewayHttpListener')]"
+                "id": "[concat(variables('applicationGatewayID'), '/httpListeners/http')]"
               },
               "backendAddressPool": {
                 "id": "[concat(variables('applicationGatewayID'), '/backendAddressPools/appGatewayBackendPool')]"
               },
               "backendHttpSettings": {
-                "id": "[concat(variables('applicationGatewayID'), '/backendHttpSettingsCollection/appGatewayBackendHttpSettings')]"
+                "id": "[concat(variables('applicationGatewayID'), '/backendHttpSettingsCollection/http')]"
+              }
+            }
+          },
+          {
+            "name": "httpsRule",
+            "properties": {
+              "ruleType": "Basic",
+              "httpListener": {
+                "id": "[concat(variables('applicationGatewayID'), '/httpListeners/https')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(variables('applicationGatewayID'), '/backendAddressPools/appGatewayBackendPool')]"
+              },
+              "backendHttpSettings": {
+                "id": "[concat(variables('applicationGatewayID'), '/backendHttpSettingsCollection/https')]"
               }
             }
           }
