@@ -47,3 +47,10 @@ one will be created by the script or reused if it already exists (think of this 
 ```bash
 ./azure-group-deploy.sh -a [foldername] -l eastus -u
 ```
+### Bash directly
+This bash command excutes deployment directly without uploading artifacts.
+
+```bash
+az group create -n jjtest -l westeurope
+az group deployment create -g jjtest --template-file azuredeploy.json --parameters azuredeploy.parameters.json
+```
