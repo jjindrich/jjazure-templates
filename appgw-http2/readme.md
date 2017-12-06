@@ -25,7 +25,7 @@ Test in browser url running Azure VM
 ![virtual machine](media/vm.png)
 
 ## Test Applicationn Gateway HTTP/2
-Test in browser
+Test in browser https://yourappgw
 ![application gateway](media/appgw.png)
 
 ## Protocol gRPC
