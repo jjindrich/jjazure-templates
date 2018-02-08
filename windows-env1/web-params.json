@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vm_web_availabilitySetName": {
+      "value": "cewsvsweb-set"
+    },
+    "lb_db_name": {
+      "value": "cewsvsweb-lb"
+    },
+    "lb_publicIp_name": {
+      "value": "cewsvsweb-lb-ip"
+    },
+    "vm_web01_name": {
+      "value": "cewsvsweb01"
+    },
+    "vm_web02_name": {
+      "value": "cewsvsweb02"
+    },
+    "vm_web03_name": {
+      "value": "cewsvsweb03"
+    },
+    "adminUsername": {
+      "value": "cloudadmin"
+    },
+    "adminPassword": {
+      "value": "Azure-123456789"
+    },
+    "virtualNetworkName": {
+      "value": "cesvs-vnet"
+    },
+    "virtualNetworkNameSubnet": {
+      "value": "DmzWeb"
+    },
+    "virtualNetworkResourceGroup": {
+      "value": "SVS-INFRA"
+    }
+  }
+}

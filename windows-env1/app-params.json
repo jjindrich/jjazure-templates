@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vm_app_availabilitySetName": {
+      "value": "cewsvsapp-set"
+    },
+    "vm_app01_name": {
+      "value": "cewsvsapp01"
+    },
+    "vm_app02_name": {
+      "value": "cewsvsapp02"
+    },
+    "vm_app03_name": {
+      "value": "cewsvsapp03"
+    },
+    "adminUsername": {
+      "value": "cloudadmin"
+    },
+    "adminPassword": {
+      "value": "Azure-123456789"
+    },
+    "virtualNetworkName": {
+      "value": "cesvs-vnet"
+    },
+    "virtualNetworkNameSubnet": {
+      "value": "DmzWeb"
+    },
+    "virtualNetworkResourceGroup": {
+      "value": "SVS-INFRA"
+    }
+  }
+}
