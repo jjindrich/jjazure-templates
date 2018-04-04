@@ -1,4 +1,4 @@
-# Deploy a VM Scale Set of Windows VMs with a custom script extension
+# Deploy a VM Scale Set of Linux VMs with a custom script extension
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fjjindrich%2Fazure-templates%2Fmaster%2Fvmss-custom-script-linux%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
