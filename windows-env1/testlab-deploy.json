@@ -1,0 +1,712 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vm_testagent01_name": {
+            "defaultValue": "cewsvsta01",
+            "type": "string",
+            "metadata": {
+                "description": "Name of Visual Studio Test agent"
+            }
+        },
+        "vm_testagent02_name": {
+            "defaultValue": "cewsvsta02",
+            "type": "string",
+            "metadata": {
+                "description": "Name of Visual Studio Test agent"
+            }
+        },
+        "vm_testagent03_name": {
+            "defaultValue": "cewsvsta03",
+            "type": "string",
+            "metadata": {
+                "description": "Name of Visual Studio Test agent"
+            }
+        },
+        "vm_testagent_size": {
+            "defaultValue": "Standard_F4S_v3",
+            "type": "string",
+            "metadata": {
+                "description": "Size of Visual Studio Test agents"
+            }
+        },
+        "vm_testdb_name": {
+            "defaultValue": "cewsvstdb",
+            "type": "string",
+            "metadata": {
+                "description": "Name of Visual Studio Test SQL server"
+            }
+        },
+        "vm_testdb_size": {
+            "defaultValue": "Standard_DS3_v2",
+            "type": "string",
+            "metadata": {
+                "description": "Size of Visual Studio Test SQL server"
+            }
+        },
+        "vm_testclient_name": {
+            "defaultValue": "cewsvstcl",
+            "type": "string",
+            "metadata": {
+                "description": "Name of Visual Studio IDE client"
+            }
+        },
+        "vm_testclient_size": {
+            "defaultValue": "Standard_F4S_v2",
+            "type": "string",
+            "metadata": {
+                "description": "Size of Visual Studio IDE client"
+            }
+        },
+        "vm_testclient_publicIp_name": {
+            "defaultValue": "cewsvstl-ip",
+            "type": "string",
+            "metadata": {
+                "description": "Name of Public IP address assigned to VS IDE server"
+            }
+        },
+        "adminUsername": {
+            "defaultValue": "mstestadmin",
+            "type": "string",
+            "metadata": {
+                "description": "User name for the Virtual Machine."
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Password for the Virtual Machine."
+            }
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network"
+            }
+        },
+        "virtualNetworkNameSubnet": {
+            "type": "string",
+            "metadata": {
+                "description": "Subnet name in Virtual Network"
+            }
+        },
+        "virtualNetworkResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource group with Virtual Network"
+            }
+        },
+        "sqlConnectivityType": {
+            "type": "string"
+        },
+        "sqlPortNumber": {
+            "type": "int"
+        },
+        "sqlStorageDisksCount": {
+            "type": "int"
+        },
+        "sqlStorageWorkloadType": {
+            "type": "string"
+        },
+        "sqlStorageDisksConfigurationType": {
+            "type": "string"
+        },
+        "sqlStorageStartingDeviceId": {
+            "type": "int"
+        },
+        "sqlAutopatchingDayOfWeek": {
+            "type": "string"
+        },
+        "sqlAutopatchingStartHour": {
+            "type": "string"
+        },
+        "sqlAutopatchingWindowDuration": {
+            "type": "string"
+        },
+        "sqlAutobackupRetentionPeriod": {
+            "type": "string"
+        },
+        "sqlAutobackupStorageAccountName": {
+            "type": "string"
+        },
+        "sqlAutobackupStorageAccountType": {
+            "type": "string"
+        },
+        "backupSystemDbs": {
+            "type": "string"
+        },
+        "backupScheduleType": {
+            "type": "string"
+        },
+        "rServicesEnabled": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "nic_testagent01_name": "[concat(parameters('vm_testagent01_name'),'-', 'nic01')]",
+        "nsg_testagent01_name": "[concat(parameters('vm_testagent01_name'),'-', 'nsg')]",
+        "nic_testagent02_name": "[concat(parameters('vm_testagent02_name'),'-', 'nic01')]",
+        "nsg_testagent02_name": "[concat(parameters('vm_testagent02_name'),'-', 'nsg')]",
+        "nic_testagent03_name": "[concat(parameters('vm_testagent03_name'),'-', 'nic01')]",
+        "nsg_testagent03_name": "[concat(parameters('vm_testagent03_name'),'-', 'nsg')]",
+        "nic_testdb_name": "[concat(parameters('vm_testdb_name'),'-', 'nic01')]",
+        "nsg_testdb_name": "[concat(parameters('vm_testdb_name'),'-', 'nsg')]",
+        "nic_testclient_name": "[concat(parameters('vm_testclient_name'),'-', 'nic01')]",
+        "nsg_testclient_name": "[concat(parameters('vm_testclient_name'),'-', 'nsg')]",
+        "vnetId": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+        "subnetRef": "[concat(variables('vnetId'),'/subnets/', parameters('virtualNetworkNameSubnet'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('vm_testagent01_name')]",
+            "apiVersion": "2017-03-30",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('vm_testagent_size')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2016-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "createOption": "FromImage"
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('vm_testagent01_name')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic_testagent01_name'))]"
+                        }
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('nic_testagent01_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[variables('nic_testagent01_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.0.1.53",
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "enableAcceleratedNetworking": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_testagent01_name'))]"
+                },
+                "primary": true,
+                "virtualMachine": {
+                    "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vm_testagent01_name'))]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_testagent01_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[variables('nsg_testagent01_name')]",
+            "apiVersion": "2017-03-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": []
+            },
+            "dependsOn": []
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('vm_testagent02_name')]",
+            "apiVersion": "2017-03-30",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('vm_testagent_size')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2016-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "createOption": "FromImage"
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('vm_testagent02_name')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic_testagent02_name'))]"
+                        }
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('nic_testagent02_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[variables('nic_testagent02_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.0.1.54",
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "enableAcceleratedNetworking": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_testagent02_name'))]"
+                },
+                "primary": true,
+                "virtualMachine": {
+                    "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vm_testagent02_name'))]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_testagent02_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[variables('nsg_testagent02_name')]",
+            "apiVersion": "2017-03-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": []
+            },
+            "dependsOn": []
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('vm_testagent03_name')]",
+            "apiVersion": "2017-03-30",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('vm_testagent_size')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2016-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "createOption": "FromImage"
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('vm_testagent03_name')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic_testagent03_name'))]"
+                        }
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('nic_testagent03_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[variables('nic_testagent03_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.0.1.55",
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "enableAcceleratedNetworking": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_testagent03_name'))]"
+                },
+                "primary": true,
+                "virtualMachine": {
+                    "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vm_testagent03_name'))]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_testagent03_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[variables('nsg_testagent03_name')]",
+            "apiVersion": "2017-03-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": []
+            },
+            "dependsOn": []
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('vm_testclient_name')]",
+            "apiVersion": "2017-03-30",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('vm_testclient_size')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftVisualStudio",
+                        "offer": "VisualStudio",
+                        "sku": "VS-2017-Ent-Latest-WS2016",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "createOption": "FromImage"
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('vm_testclient_name')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic_testclient_name'))]"
+                        }
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('nic_testclient_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[variables('nic_testclient_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.0.1.51",
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4",
+                            "publicIpAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIpAddresses', parameters('vm_testclient_publicIp_name'))]"
+                            }
+                        }
+                    }
+                ],
+                "enableAcceleratedNetworking": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_testclient_name'))]"
+                },
+                "primary": true,
+                "virtualMachine": {
+                    "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vm_testclient_name'))]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_testclient_name'))]",
+                "[concat('Microsoft.Network/publicIpAddresses/', parameters('vm_testclient_publicIp_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[parameters('vm_testclient_publicIp_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4,
+                "dnsSettings": {
+                    "domainNameLabel": "cesvstcl"                    
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[variables('nsg_testclient_name')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2017-06-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "default-allow-rdp",
+                        "properties": {
+                            "priority": 1000,
+                            "protocol": "Tcp",
+                            "access": "Allow",
+                            "direction": "Inbound",
+                            "sourceAddressPrefix": "*",
+                            "sourcePortRange": "*",
+                            "destinationAddressPrefix": "*",
+                            "destinationPortRange": "3389"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[parameters('sqlAutobackupStorageAccountName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2015-06-15",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "accountType": "[parameters('sqlAutobackupStorageAccountType')]"
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('vm_testdb_name')]",
+            "apiVersion": "2017-03-30",
+            "location": "[resourceGroup().location]",
+            "scale": null,
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('vm_testdb_size')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftSQLServer",
+                        "offer": "SQL2017-WS2016",
+                        "sku": "Standard",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS"
+                        }
+                    },
+                    "dataDisks": [
+                        {
+                            "createOption": "Empty",
+                            "lun": 0,
+                            "diskSizeGB": 256,
+                            "caching": "ReadOnly",
+                            "managedDisk": {
+                                "storageAccountType": "Premium_LRS"
+                            }
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('vm_testdb_name')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic_testdb_name'))]"
+                        }
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('nic_testdb_name'))]"
+            ]
+        },
+        {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('vm_testdb_name'), '/SqlIaasExtension')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('vm_testdb_name'))]"
+            ],
+            "properties": {
+                "type": "SqlIaaSAgent",
+                "publisher": "Microsoft.SqlServer.Management",
+                "typeHandlerVersion": "1.2",
+                "autoUpgradeMinorVersion": "true",
+                "settings": {
+                    "AutoTelemetrySettings": {
+                        "Region": "[resourceGroup().location]"
+                    },
+                    "AutoPatchingSettings": {
+                        "PatchCategory": "WindowsMandatoryUpdates",
+                        "Enable": true,
+                        "DayOfWeek": "[parameters('sqlAutopatchingDayOfWeek')]",
+                        "MaintenanceWindowStartingHour": "[parameters('sqlAutopatchingStartHour')]",
+                        "MaintenanceWindowDuration": "[parameters('sqlAutopatchingWindowDuration')]"
+                    },
+                    "AutoBackupSettings": {
+                        "Enable": true,
+                        "RetentionPeriod": "[parameters('sqlAutobackupRetentionPeriod')]",
+                        "EnableEncryption": false,
+                        "BackupSystemDbs": "[parameters('backupSystemDbs')]",
+                        "BackupScheduleType": "[parameters('backupScheduleType')]"
+                    },
+                    "KeyVaultCredentialSettings": {
+                        "Enable": false,
+                        "CredentialName": ""
+                    },
+                    "ServerConfigurationsManagementSettings": {
+                        "SQLConnectivityUpdateSettings": {
+                            "ConnectivityType": "[parameters('sqlConnectivityType')]",
+                            "Port": "[parameters('sqlPortNumber')]"
+                        },
+                        "SQLWorkloadTypeUpdateSettings": {
+                            "SQLWorkloadType": "[parameters('sqlStorageWorkloadType')]"
+                        },
+                        "SQLStorageUpdateSettings": {
+                            "DiskCount": "[parameters('sqlStorageDisksCount')]",
+                            "NumberOfColumns": "[parameters('sqlStorageDisksCount')]",
+                            "StartingDeviceID": "[parameters('sqlStorageStartingDeviceId')]",
+                            "DiskConfigurationType": "[parameters('sqlStorageDisksConfigurationType')]"
+                        },
+                        "AdditionalFeaturesServerConfigurations": {
+                            "IsRServicesEnabled": "[parameters('rServicesEnabled')]"
+                        }
+                    }
+                },
+                "protectedSettings": {
+                    "StorageUrl": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('sqlAutobackupStorageAccountName')), '2015-06-15').primaryEndpoints['blob']]",
+                    "StorageAccessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('sqlAutobackupStorageAccountName')), '2015-06-15').key1]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[variables('nic_testdb_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "[resourceGroup().location]",
+            "scale": null,
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.0.1.52",
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "enableAcceleratedNetworking": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_testdb_name'))]"
+                },
+                "primary": true,
+                "virtualMachine": {
+                    "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vm_testdb_name'))]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_testdb_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[variables('nsg_testdb_name')]",
+            "apiVersion": "2017-03-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": []
+            },
+            "dependsOn": []
+        }
+    ]
+}

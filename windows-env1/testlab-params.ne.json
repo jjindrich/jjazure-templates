@@ -1,0 +1,93 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vm_testagent01_name": {
+      "value": "cewsvsta01"
+    },
+    "vm_testagent02_name": {
+      "value": "cewsvsta02"
+    },
+    "vm_testagent03_name": {
+      "value": "cewsvsta03"
+    },
+    "vm_testagent_size": {
+      "value": "Standard_DS1_v2"
+    },
+    "vm_testdb_name": {
+      "value": "cewsvstdb"
+    },
+    "vm_testdb_size": {
+      "value": "Standard_DS3_v2"
+    },
+    "vm_testclient_name": {
+      "value": "cewsvstcl"
+    },
+    "vm_testclient_size": {
+      "value": "Standard_DS1_v2"
+    },
+    "vm_testclient_publicIp_name": {
+      "value": "cewsvstcl-ip"
+    },
+    "adminUsername": {
+      "value": "mstestadmin"
+    },
+    "adminPassword": {
+      "value": "Azure-123456789"
+    },
+    "virtualNetworkName": {
+      "value": "cesvs-vnet-ne"
+    },
+    "virtualNetworkNameSubnet": {
+      "value": "DmzWeb"
+    },
+    "virtualNetworkResourceGroup": {
+      "value": "SVS-INFRA-NE"
+    },
+    "sqlConnectivityType": {
+      "value": "Private"
+    },
+    "sqlPortNumber": {
+      "value": 1433
+    },
+    "sqlStorageDisksCount": {
+      "value": 1
+    },
+    "sqlStorageWorkloadType": {
+      "value": "OLTP"
+    },
+    "sqlStorageDisksConfigurationType": {
+      "value": "NEW"
+    },
+    "sqlStorageStartingDeviceId": {
+      "value": 2
+    },
+    "sqlAutopatchingDayOfWeek": {
+      "value": "Sunday"
+    },
+    "sqlAutopatchingStartHour": {
+      "value": "2"
+    },
+    "sqlAutopatchingWindowDuration": {
+      "value": "60"
+    },
+    "sqlAutobackupRetentionPeriod": {
+      "value": "30"
+    },
+    "sqlAutobackupStorageAccountName": {
+      "value": "cesvstdbbackup"
+    },
+    "sqlAutobackupStorageAccountType": {
+      "value": "Standard_GRS"
+    },
+    "backupSystemDbs": {
+      "value": "false"
+    },
+    "backupScheduleType": {
+      "value": "Automated"
+    },
+    "rServicesEnabled": {
+      "value": "false"
+    }
+  }
+}
