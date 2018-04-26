@@ -1,0 +1,145 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachineName": {
+            "type": "string"
+        },
+        "virtualMachineSize": {
+            "type": "string"
+        },
+        "osDisk": {
+            "type": "string"
+        },
+        "networkInterfaceName": {
+            "type": "string"
+        },
+        "networkSecurityGroupName": {
+            "type": "string"
+        },
+        "publicIpAddressName": {
+            "type": "string"
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network"
+            }
+        },
+        "virtualNetworkSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Subnet name in Virtual Network"
+            }
+        },
+        "virtualNetworkResourceGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource group with Virtual Network"
+            }
+        }
+    },
+    "variables": {
+        "diskId": "[resourceId('Microsoft.Compute/disks', parameters('osDisk'))]",
+        "vnetId": "[resourceId(parameters('virtualNetworkResourceGroupName'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+        "subnetRef": "[concat(variables('vnetId'),'/subnets/', parameters('virtualNetworkSubnetName'))]"
+    },
+    "resources": [
+        {
+            "name": "[parameters('virtualMachineName')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2017-03-30",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "osType": "Windows",
+                        "createOption": "Attach",
+                        "managedDisk": {
+                            "id": "[variables('diskId')]",
+                            "storageAccountType": "Premium_LRS"
+                        }
+                    },
+                    "dataDisks": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "[parameters('networkInterfaceName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2016-09-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName'))]",
+                "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIpAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName'))]"
+                            }
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                }
+            }
+        },
+        {
+            "name": "[parameters('publicIpAddressName')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2017-08-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Dynamic"
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[parameters('networkSecurityGroupName')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2017-06-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "default-allow-rdp",
+                        "properties": {
+                            "priority": 1000,
+                            "protocol": "Tcp",
+                            "access": "Allow",
+                            "direction": "Inbound",
+                            "sourceAddressPrefix": "*",
+                            "sourcePortRange": "*",
+                            "destinationAddressPrefix": "*",
+                            "destinationPortRange": "3389"
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {}
+}
