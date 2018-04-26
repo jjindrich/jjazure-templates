@@ -12,13 +12,19 @@
       "value": "cewsvsta03"
     },
     "vm_testagent_size": {
-      "value": "Standard_F4S_v2"
+      "value": "Standard_DS2_v2"
     },
     "vm_testdb_name": {
       "value": "cewsvstdb"
     },
+    "vm_testdb_size": {
+      "value": "Standard_DS3_v2"
+    },
     "vm_testclient_name": {
       "value": "cewsvstcl"
+    },
+    "vm_testclient_size": {
+      "value": "Standard_DS2_v2"
     },
     "vm_testclient_publicIp_name": {
       "value": "cewsvstcl-ip"
