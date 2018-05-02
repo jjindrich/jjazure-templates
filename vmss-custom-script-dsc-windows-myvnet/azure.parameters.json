@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmssName": {
+      "value": "jjwin"
+    },
+    "instanceCount": {
+      "value": 1
+    },
+    "adminUsername": {
+      "value": "jj"
+    },
+    "adminPassword": {
+      "value": "PASS-GEN"
+    },
+    "virtualNetworkResourceGroup": {
+      "value": "VNET-RG"
+    },
+    "virtualNetworkName": {
+      "value": "VNET"
+    },
+    "virtualNetworkSubnetName": {
+      "value": "Subnet"
+    },
+    "_artifactsLocation": {
+      "value": "https://jjdscscripts.blob.core.windows.net/scripts"
+    },
+    "_artifactsLocationSasToken" : {
+      "value": ""
+    },
+    "DscExtensionUpdateTagVersion" :{
+    "value" : "1.2"
+    }
+  }
+}
