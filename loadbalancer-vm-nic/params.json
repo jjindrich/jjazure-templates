@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vm_name": {
+            "value": "jjvm"
+        },
+        "vm_nic_name": {
+            "value": "jjvm615"
+        },
+        "vm_availabilitySetName": {
+            "value": "jjvmset"
+        },
+        "nsg_name": {
+            "value": "jjvm-nsg"
+        },
+        "lb_name": {
+            "value": "jjlb"
+        },
+        "virtualNetwork_name": {
+            "value": "<MY-VNET>-vnet"
+        },
+        "virtualNetwork_subnet_name": {
+            "value": "default"
+        }
+    }
+  }

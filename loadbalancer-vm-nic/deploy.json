@@ -1,0 +1,64 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vm_name": {
+            "type": "string"
+        },
+        "vm_nic_name": {
+            "type": "string"
+        },
+        "vm_availabilitySetName": {
+            "type": "string"
+        },
+        "nsg_name": {
+            "type": "string"
+        },
+        "lb_name": {
+            "type": "string"
+        },
+        "virtualNetwork_name": {
+            "type": "string"
+        },
+        "virtualNetwork_subnet_name": {
+            "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[parameters('vm_nic_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetwork_name'), parameters('virtualNetwork_subnet_name'))]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4",
+                            "loadBalancerBackendAddressPools": [
+                                {
+                                    "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('lb_name')), '/backendAddressPools/', parameters('vm_availabilitySetName'))]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsg_name'))]"
+                },
+                "primary": true,
+                "virtualMachine": {
+                    "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vm_name'))]"
+                }
+            },
+            "dependsOn": []
+        }
+    ]
+}
