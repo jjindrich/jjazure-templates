@@ -9,7 +9,6 @@ There must be separate backend pool referencing IPv6 NICs. You cannot combine NI
 
 [Sample ARM template](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-ipv6-internet-template)
 
-
 ## Deploy template
 
 Update script with your resource group name and select proper OS template.
@@ -22,15 +21,28 @@ az group deployment create -g $rg --template-file deploy-<windows/linux>.json --
 ```
 
 ## Configure server
+
 Load balancer publish port 80, you have install web server
 
-Linux - install nginx
+### Linux - install nginx
 
 ```bash
 sudo apt install nginx
 ```
 
-Windows - install IIS
+Change network adapter to get IPv6 from DHCP and restart server.
+
+```bash
+sudo nano /etc/network/interfaces.d/eth0.cfg
+# The primary network interface
+auto eth0
+iface eth0 inet dhcp
+iface eth0 inet6 dhcp
+```
+
+### Windows - install IIS
+
+TODO JJ: add steps
 
 ## Check configuration
 
