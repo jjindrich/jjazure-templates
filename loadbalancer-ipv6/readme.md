@@ -18,7 +18,7 @@ Update script with your resource group name and select proper OS template.
 rg=<YOUR RESOURCE GROUP>
 az group create -n $rg -l westus
 
-az group deployment create -g $rg --template-file deploy-<windows/linux>.json --parameters params-win.json
+az group deployment create -g $rg --template-file deploy-<windows/linux>.json --parameters params.json
 ```
 
 ## Configure server
