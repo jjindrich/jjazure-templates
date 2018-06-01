@@ -307,10 +307,7 @@
       "location": "[resourceGroup().location]",
       "properties": {
         "publicIPAddressVersion": "IPv4",
-        "publicIPAllocationMethod": "Dynamic",
-        "dnsSettings": {
-          "domainNameLabel": "jjlb"
-        }
+        "publicIPAllocationMethod": "Dynamic"
       }
     },
     {
@@ -320,10 +317,7 @@
       "location": "[resourceGroup().location]",
       "properties": {
         "publicIPAddressVersion": "IPv6",
-        "publicIPAllocationMethod": "Dynamic",
-        "dnsSettings": {
-          "domainNameLabel": "jjlbv6"
-        }
+        "publicIPAllocationMethod": "Dynamic"
       }
     }
   ]

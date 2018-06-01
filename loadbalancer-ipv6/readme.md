@@ -24,7 +24,7 @@ az group deployment create -g $rg --template-file deploy-<windows/linux>.json --
 
 Load balancer publish port 80, you have install web server
 
-### Linux - install nginx
+### Linux - install NGINX
 
 ```bash
 sudo apt install nginx
@@ -42,7 +42,10 @@ iface eth0 inet6 dhcp
 
 ### Windows - install IIS
 
-TODO JJ: add steps
+Steps:
+
+1. Check network adapter has enabled IPv6 with DHCP
+2. Install role named Web Server and check binding on all ip addresses
 
 ## Check configuration
 
