@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vm_web_availabilitySetName": {
+      "value": "jjvm-set"
+    },
+    "lb_web_name": {
+      "value": "jjvm-lb"
+    },
+    "lb_publicIp_namev4": {
+      "value": "jjvm-lb-ip"
+    },
+    "lb_publicIp_namev6": {
+      "value": "jjvm-lb-ip6"
+    },
+    "vm_web_name": {
+      "value": "jjvm"
+    },
+    "adminUsername": {
+      "value": "jj"
+    },
+    "adminPassword": {
+      "value": "Azure-123456789"
+    },
+    "virtualNetworkName": {
+      "value": "JJDevV2Network-US"
+    },
+    "virtualNetworkSubnetName": {
+      "value": "DmzWeb"
+    },
+    "virtualNetworkResourceGroup": {
+      "value": "JJDevV2-Infra-US"
+    }
+  }
+}

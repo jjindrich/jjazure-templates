@@ -1,0 +1,330 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vm_web_availabilitySetName": {
+      "type": "string"
+    },
+    "lb_web_name": {
+      "type": "string"
+    },
+    "lb_publicIp_namev4": {
+      "type": "string"
+    },
+    "lb_publicIp_namev6": {
+      "type": "string"
+    },
+    "vm_web_name": {
+      "type": "string"
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "User name for the Virtual Machine."
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password for the Virtual Machine."
+      }
+    },
+    "virtualNetworkResourceGroup": {
+      "type": "string"
+    },
+    "virtualNetworkName": {
+      "type": "string"
+    },
+    "virtualNetworkSubnetName": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "nic_web_name": "[concat(parameters('vm_web_name'),'-', 'nic01')]",
+    "nsg_web_name": "[concat(parameters('vm_web_name'),'-', 'nsg')]",
+    "vnetId": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+    "subnetRef": "[concat(variables('vnetId'),'/subnets/', parameters('virtualNetworkSubnetName'))]",
+    "lbId": "[resourceId('Microsoft.Network/loadBalancers',parameters('lb_web_name'))]"
+  },
+  "resources": [
+    {
+      "name": "[parameters('vm_web_availabilitySetName')]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "platformFaultDomainCount": 3,
+        "platformUpdateDomainCount": 5,
+        "managed": true
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[parameters('vm_web_name')]",
+      "apiVersion": "2017-03-30",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "Standard_F2s"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "14.04.4-LTS",
+            "version": "latest"
+          },
+          "osDisk": {
+            "osType": "Linux",
+            "createOption": "FromImage"
+          },
+          "dataDisks": []
+        },
+        "osProfile": {
+          "computerName": "[parameters('vm_web_name')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]",
+          "secrets": []
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic_web_name'))]"
+            }
+          ]
+        },
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('vm_web_availabilitySetName'))]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('nic_web_name'))]",
+        "[concat('Microsoft.Compute/availabilitySets/', parameters('vm_web_availabilitySetName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[variables('nic_web_name')]",
+      "apiVersion": "2017-06-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('subnetRef')]"
+              },
+              "primary": true,
+              "privateIPAddressVersion": "IPv4",
+              "loadBalancerBackendAddressPools": [
+                {
+                  "id": "[concat(variables('lbID'), '/backendAddressPools/', parameters('vm_web_availabilitySetName'), '-v4')]"
+                }
+              ],
+              "loadBalancerInboundNatRules": [
+                {
+                  "id": "[concat(variables('lbID'),'/inboundNatRules/',parameters('vm_web_name'),'-ssh')]"
+                }
+              ]
+            }
+          },
+          {
+            "name": "ipv6IPConfig",
+            "properties": {
+              "privateIPAddressVersion": "IPv6",
+              "privateIPAllocationMethod": "Dynamic",
+              "loadBalancerBackendAddressPools": [
+                {
+                  "id": "[concat(variables('lbID'), '/backendAddressPools/', parameters('vm_web_availabilitySetName'), '-v6')]"
+                }
+              ]
+            }
+          }
+        ],
+        "enableAcceleratedNetworking": false,
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_web_name'))]"
+        },
+        "primary": true,
+        "virtualMachine": {
+          "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vm_web_name'))]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg_web_name'))]",
+        "[concat('Microsoft.Network/loadBalancers/', parameters('lb_web_name'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[variables('nsg_web_name')]",
+      "apiVersion": "2017-03-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "AllowInSsh",
+            "properties": {
+              "description": "Allow SSH",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "22",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "AllowInHttp",
+            "properties": {
+              "description": "Allow HTTP",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "80",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 110,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      },
+      "dependsOn": []
+    },
+    {
+      "apiVersion": "2017-10-01",
+      "name": "[parameters('lb_web_name')]",
+      "type": "Microsoft.Network/loadBalancers",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "LoadBalancerFrontEndIPv4",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('lb_publicIp_namev4'))]"
+              }
+            }
+          },
+          {
+            "name": "LoadBalancerFrontEndIPv6",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('lb_publicIp_namev6'))]"
+              }
+            }
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "[concat(parameters('vm_web_availabilitySetName'),'-v4')]"
+          },
+          {
+            "name": "[concat(parameters('vm_web_availabilitySetName'),'-v6')]"
+          }
+        ],
+        "inboundNatRules": [
+          {
+            "name": "[concat(parameters('vm_web_name'),'-ssh')]",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(variables('lbId'),'/frontendIPConfigurations/LoadBalancerFrontEndIPv4')]"
+              },
+              "protocol": "Tcp",
+              "frontendPort": 50001,
+              "backendPort": 22,
+              "enableFloatingIP": false
+            }
+          }
+        ],
+        "loadBalancingRules": [
+          {
+            "name": "HttpListener-v4",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(variables('lbId'),'/frontendIPConfigurations/LoadBalancerFrontEndIPv4')]"
+              },
+              "frontendPort": 80,
+              "backendPort": 80,
+              "idleTimeoutInMinutes": 4,
+              "protocol": "Tcp",
+              "loadDistribution": "Default",
+              "backendAddressPool": {
+                "id": "[concat(variables('lbId'),'/backendAddressPools/',parameters('vm_web_availabilitySetName'), '-v4')]"
+              },
+              "probe": {
+                "id": "[concat(variables('lbId'),'/probes/HttpProbe')]"
+              }
+            }
+          },
+          {
+            "name": "HttpListener-v6",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(variables('lbId'),'/frontendIPConfigurations/LoadBalancerFrontEndIPv6')]"
+              },
+              "frontendPort": 80,
+              "backendPort": 80,
+              "idleTimeoutInMinutes": 4,
+              "protocol": "Tcp",
+              "loadDistribution": "Default",
+              "backendAddressPool": {
+                "id": "[concat(variables('lbId'),'/backendAddressPools/',parameters('vm_web_availabilitySetName'), '-v6')]"
+              },
+              "probe": {
+                "id": "[concat(variables('lbId'),'/probes/HttpProbe')]"
+              }
+            }
+          }
+        ],
+        "probes": [
+          {
+            "name": "HttpProbe",
+            "properties": {
+              "protocol": "Http",
+              "port": 80,
+              "requestPath": "/",
+              "intervalInSeconds": 5,
+              "numberOfProbes": 2
+            }
+          }
+        ]
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', parameters('lb_publicIp_namev4'))]",
+        "[concat('Microsoft.Network/publicIPAddresses/', parameters('lb_publicIp_namev6'))]"
+      ]
+    },
+    {
+      "apiVersion": "2016-03-30",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[parameters('lb_publicIp_namev4')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publicIPAddressVersion": "IPv4",
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "jjlb"
+        }
+      }
+    },
+    {
+      "apiVersion": "2016-03-30",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[parameters('lb_publicIp_namev6')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publicIPAddressVersion": "IPv6",
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "jjlbv6"
+        }
+      }
+    }
+  ]
+}
