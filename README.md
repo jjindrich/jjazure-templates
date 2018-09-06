@@ -13,6 +13,7 @@ Simply execute the script and pass in the folder name of the sample you want to 
 For example:
 
 ### PowerShell
+
 ```PowerShell
 .\Deploy-AzureResourceGroup.ps1 -ResourceGroupLocation 'eastus' -ArtifactStagingDirectory '[foldername]'
 or
