@@ -110,7 +110,7 @@
                             "subnet": {
                                 "id": "[variables('azureFirewallSubnetId')]"
                             },
-                            "InternalPublicIPAddress": {
+                            "publicIPAddress": {
                                 "id": "[variables('azureFirewallPublicIpId')]"
                             }
                         }
@@ -137,7 +137,7 @@
                                             "protocolType": "https"
                                         }
                                     ],
-                                    "targetUrls": [
+                                    "targetFqdns": [
                                         "*microsoft.com"
                                     ]
                                 },
@@ -153,7 +153,7 @@
                                             "protocolType": "https"
                                         }
                                     ],
-                                    "targetUrls": [
+                                    "targetFqdns": [
                                         "*ubuntu.com"
                                     ]
                                 }
@@ -177,7 +177,7 @@
                                         "TCP"
                                     ],
                                     "translatedAddress": "10.1.0.4",
-                                    "translatedPort": "2200",
+                                    "translatedPort": "22",
                                     "sourceAddresses": [
                                         "*"
                                     ],
@@ -185,7 +185,7 @@
                                         "10.1.0.4"
                                     ],
                                     "destinationPorts": [
-                                        "22"
+                                        "2200"
                                     ]
                                 }
                             ]

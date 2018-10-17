@@ -26,3 +26,7 @@ az vm create -g FW-TEST-VM -n jjvm --custom-data vm-init.txt --image UbuntuLTS -
 
 ## Publish web server with Azure Application Gateway
 Create Application Gateway in specific vnet subnet. On this subnet cannot be Azure Firewall activated (routing is disabled). After created, simply publish web server.
+
+```bash
+az network application-gateway create  -g FW-TEST-VM1 -l westeurope -n jjtestfw-appgw --capacity 2 --sku Standard_Medium --frontend-port 80 --http-settings-port 80 --http-settings-protocol http --routing-rule-type Basic --public-ip-address-allocation Dynamic --subnet $(az network vnet subnet show -g FW-TEST --vnet-name jjtestfw-vnet -n appgw -o tsv --query id) --servers 10.1.0.4
+```
