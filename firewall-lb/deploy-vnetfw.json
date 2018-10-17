@@ -164,7 +164,7 @@
                 "networkRuleCollections": [],
                 "natRuleCollections": [
                     {
-                        "name": "Dnat",
+                        "name": "PublishLinux",
                         "properties": {
                             "priority": 100,
                             "action": {
@@ -172,7 +172,7 @@
                             },
                             "rules": [
                                 {
-                                    "name": "test",
+                                    "name": "SSH",
                                     "protocols": [
                                         "TCP"
                                     ],
@@ -182,10 +182,27 @@
                                         "*"
                                     ],
                                     "destinationAddresses": [
-                                        "10.1.0.4"
+                                        "52.137.26.15"
                                     ],
                                     "destinationPorts": [
                                         "2200"
+                                    ]
+                                },
+                                {
+                                    "name": "http",
+                                    "protocols": [
+                                        "TCP"
+                                    ],
+                                    "translatedAddress": "10.1.0.4",
+                                    "translatedPort": "80",
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "destinationAddresses": [
+                                        "52.137.26.15"
+                                    ],
+                                    "destinationPorts": [
+                                        "8080"
                                     ]
                                 }
                             ]
