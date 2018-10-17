@@ -8,7 +8,6 @@ Template created base on this sample https://docs.microsoft.com/en-us/azure/fire
 az group create -n FW-TEST -l westeurope
 az group deployment create -g FW-TEST --template-file deploy-vnetfw.json --parameters deploy-vnetfw-params.json
 ```
-KNOWN ISSUE: There is hardcoded public IP address in firewall NAT rule. You have to redeploy with correct IP address.
 
 ## Create VM with web server
 Webserver is created with cloud init - from file vm-init.txt

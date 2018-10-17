@@ -13,6 +13,7 @@
         "FwPublicIPName": "[concat(variables('firewallName'),'-ip')]",
         "vnetSubnetFw": "AzureFirewallSubnet",
         "vnetSubnetBackend": "[concat('backend')]",
+        "fwPrivateIp": "10.200.0.4",
         "vnetSubnetAppGw": "[concat('appgw')]",
         "azureFirewallSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets',parameters('vnet_name'), variables('vnetSubnetFw'))]",
         "azureFirewallPublicIpId": "[resourceId('Microsoft.Network/publicIPAddresses',variables('FwpublicIPName'))]"
@@ -73,7 +74,7 @@
                         "properties": {
                             "addressPrefix": "0.0.0.0/0",
                             "nextHopType": "VirtualAppliance",
-                            "nextHopIpAddress": "10.200.0.4"
+                            "nextHopIpAddress": "[variables('fwPrivateIp')]"
                         }
                     }
                 ]
@@ -110,6 +111,8 @@
                             "subnet": {
                                 "id": "[variables('azureFirewallSubnetId')]"
                             },
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress": "[variables('fwPrivateIp')]",
                             "publicIPAddress": {
                                 "id": "[variables('azureFirewallPublicIpId')]"
                             }
@@ -182,7 +185,7 @@
                                         "*"
                                     ],
                                     "destinationAddresses": [
-                                        "52.137.26.15"
+                                        "[reference(variables('azureFirewallPublicIpId')).ipAddress]"
                                     ],
                                     "destinationPorts": [
                                         "2200"
@@ -199,7 +202,7 @@
                                         "*"
                                     ],
                                     "destinationAddresses": [
-                                        "52.137.26.15"
+                                        "[reference(variables('azureFirewallPublicIpId')).ipAddress]"
                                     ],
                                     "destinationPorts": [
                                         "8080"
