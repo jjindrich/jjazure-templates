@@ -30,3 +30,9 @@ Create Application Gateway in specific vnet subnet. On this subnet cannot be Azu
 ```bash
 az network application-gateway create  -g FW-TEST-VM1 -l westeurope -n jjtestfw-appgw --capacity 2 --sku Standard_Medium --frontend-port 80 --http-settings-port 80 --http-settings-protocol http --routing-rule-type Basic --public-ip-address-allocation Dynamic --subnet $(az network vnet subnet show -g FW-TEST --vnet-name jjtestfw-vnet -n appgw -o tsv --query id) --servers 10.1.0.4
 ```
+
+## Publish server with Azure Firewall
+Template is using DNAT rule to publish server - HTTP and SSH. There is limitation to publish TCP 80, you have to use another port.
+
+## Publish server with Azure Load Balancer
+You cannot use Azure Load Balancer with public IP because of routing rule. You have to publish thru Azure Firewall with DNAT - Azure Load Balancer with public and external IP.
