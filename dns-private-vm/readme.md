@@ -15,7 +15,7 @@ Deploy db.jjdev.local server in vnet
 
 ```bash
 az group create -n DNS-TEST-VM -l westeurope
-az vm create -g DNS-TEST-VM -n jjvmdb --image UbuntuLTS --size Standard_B1ms --subnet $(az network vnet subnet show -g DNS-TEST --vnet-name jjtestdns-vnet -n backend -o tsv --query id) --private-ip-address 10.1.0.4 --public-ip-address "" --authentication-type password --admin-username jj --admin-password Azure-1234567890
+az vm create -g DNS-TEST-VM -n jjvmdb --image UbuntuLTS --size Standard_B1ms --subnet $(az network vnet subnet show -g DNS-TEST --vnet-name jjtestdns-vnet -n backend -o tsv --query id) --private-ip-address 10.1.0.4 --public-ip-address "" --authentication-type password --admin-username jj --admin-password Azure-1234567890 --nowait
 ```
 
 Deploy server to test DNS record
@@ -23,3 +23,8 @@ Deploy server to test DNS record
 ```bash
 az vm create -g DNS-TEST-VM -n jjvmtest --image UbuntuLTS --size Standard_B1ms --subnet $(az network vnet subnet show -g DNS-TEST --vnet-name jjtestdns-vnet -n backend -o tsv --query id) --authentication-type password --admin-username jj --admin-password Azure-1234567890
 ```
+
+## Test private DNS name
+![Ping](media/dns-zone.png)
+
+![Ping](media/ping.png)
