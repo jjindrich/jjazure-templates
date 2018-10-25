@@ -1,0 +1,79 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnet_name": {
+            "defaultValue": "jjvnet",
+            "type": "string"
+        },
+        "dnsZone": {
+            "defaultValue": "myzone.local",
+            "type": "string"
+        }
+    },
+    "variables": {
+        "vnetSubnetBackend": "[concat('backend')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[parameters('vnet_name')]",
+            "apiVersion": "2018-02-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/8"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('vnetSubnetBackend')]",
+                        "properties": {
+                            "addressPrefix": "10.1.0.0/24"
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": [],
+                "enableDdosProtection": false,
+                "enableVmProtection": false
+            },
+            "dependsOn": [
+            ]
+        },
+        {
+            "type": "Microsoft.Network/dnszones",
+            "name": "[parameters('dnsZone')]",
+            "apiVersion": "2018-05-01",
+            "location": "global",
+            "properties": {
+                "registrationVirtualNetworks": [
+                    {
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet_name'))]"
+                    }
+                ],
+                "resolutionVirtualNetworks": [],
+                "zoneType": "Private"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnet_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Network/dnszones/A",
+            "name": "[concat(parameters('dnsZone'), '/', 'db')]",
+            "apiVersion": "2018-05-01",
+            "properties": {
+                "TTL": 3600,
+                "ARecords": [
+                    {
+                        "ipv4Address": "10.1.0.4"
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/dnszones', parameters('dnsZone'))]"
+            ]
+        }
+    ]
+}
