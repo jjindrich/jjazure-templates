@@ -27,7 +27,7 @@ az vm create -g DNS-TEST-VM -n jjvmtest --image UbuntuLTS --size Standard_B1ms -
 Windows test VM
 
 ```bash
-az vm create -g DNS-TEST-VM -n jjvmtestwin --image Win2016Datacenter --size Standard_B2ms --subnet $(az network vnet subnet show -g DNS-TEST --vnet-namejjtestdns-vnet -n backend -o tsv --query id) --authentication-type password --admin-username jj --admin-password Azure-1234567890
+az vm create -g DNS-TEST-VM -n jjvmtestwin --image Win2016Datacenter --size Standard_B2ms --subnet $(az network vnet subnet show -g DNS-TEST --vnet-name jjtestdns-vnet -n backend -o tsv --query id) --authentication-type password --admin-username jj --admin-password Azure-1234567890
 ```
 
 ## Test private DNS name
