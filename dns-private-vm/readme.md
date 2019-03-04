@@ -1,5 +1,7 @@
 # Virtual Network with Azure DNS Private zone
 
+!!! Limitation: Latest Ubuntu is not supported with .local domain
+
 ## Deploy template with DNS
 
 Template deploys Azure DNS privaaz vte zone with A record of db.jjdev.local
