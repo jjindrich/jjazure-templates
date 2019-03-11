@@ -57,3 +57,6 @@ Load balancer backendpool has assigned IPv4 address only.
 
 VM NIC adapter has assigned IPv4 address only.
 ![media](media/vm-nic.png)
+
+Check website with external tool
+![media](media/result.png)
