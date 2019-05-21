@@ -36,7 +36,7 @@
                 ],
                 "virtualNetworkPeerings": [],
                 "enableDdosProtection": false,
-                "enableVmProtection": false
+                "enableVmProtection": false                
             },
             "dependsOn": [
             ]
