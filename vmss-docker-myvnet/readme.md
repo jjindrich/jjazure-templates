@@ -10,6 +10,11 @@ We have to use custom script extension to install deploy it.
 ```sh
 rg=<YOUR-NAME>
 az group create -n $rg -l westeurope
+az storage account create -l westeurope --sku "Standard_LRS" -g $rg -n jjstoragescript
 
-../az-group-deploy.sh -g $rg -a vmss-docker-myvnet
+./az-group-deploy.sh -g $rg -l westeurope -s jjstoragescript -a vmss-docker-myvnet
 ```
+
+## Upgrade cluster
+Now go to Azure Portal and check Instances. There is waiting update, click Upgrade. Our VMSS is configured as Manual upgrade.
+

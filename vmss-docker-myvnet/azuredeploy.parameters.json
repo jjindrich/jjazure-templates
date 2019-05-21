@@ -15,7 +15,7 @@
         "value": "jj"
       },
       "adminPassword": {
-        "value": "Azure-1234511111"
+        "value": "<PASSWORD>"
       },
       "virtualNetworkResourceGroup": {
         "value": "vnet-central-rg"

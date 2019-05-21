@@ -37,7 +37,7 @@
         }
       },
       "_artifactsLocation": {
-        "defaultValue": "https://raw.githubusercontent.com/jjindrich/jjazure-templates/master/vmss-custom-script-linux",
+        "defaultValue": "",
         "type": "string",
         "metadata": {
           "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
@@ -147,7 +147,7 @@
                     "autoUpgradeMinorVersion": true,
                     "settings": {
                       "fileUris": [
-                        "[concat(parameters('_artifactsLocation'), '/scripts/hello.sh')]"
+                        "[concat(parameters('_artifactsLocation'), 'scripts/hello.sh',parameters('_artifactsLocationSasToken'))]"
                       ],
                       "commandToExecute": "sh hello.sh"
                     }
