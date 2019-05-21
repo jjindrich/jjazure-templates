@@ -18,4 +18,4 @@ az storage account create -l westeurope --sku "Standard_LRS" -g $rg -n jjstorage
 ## Upgrade cluster
 Now go to Azure Portal and check Instances. There is waiting update, click Upgrade. Our VMSS is configured as Manual upgrade.
 
-![VMSS waiting upgrade](media/vmss-upgrage.png)
+![VMSS waiting upgrade](media/vmss-upgrade.png)
