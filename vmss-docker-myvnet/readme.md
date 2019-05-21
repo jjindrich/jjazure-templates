@@ -7,6 +7,10 @@ We have to use custom script extension to install deploy it.
 
 ## Deploy VMSS in virtual network with Azure CLI
 
+We have to
+- check script first, update password to Azure Container Repository and your docker image.
+- update deployment parameters, password for VMSS
+
 ```sh
 rg=<YOUR-NAME>
 az group create -n $rg -l westeurope
