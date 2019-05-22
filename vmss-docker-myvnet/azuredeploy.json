@@ -58,6 +58,18 @@
       },
       "virtualNetworkSubnetName": {
         "type": "string"
+      },
+      "logAnalyticsWorkspaceId": {
+        "type": "string",
+        "metadata": {
+          "description": "LogAnalytics workspace Id"
+        }
+      },
+        "logAnalyticsWorkspaceKey": {
+          "type": "string",
+          "metadata": {
+            "description": "LogAnalytics workspace access key"
+          }
       }    
     },
     "variables": {
@@ -152,21 +164,24 @@
                       "commandToExecute": "sh hello.sh"
                     }
                   }
+                },
+                {
+                  "name": "LogAnalyticsAgentForLinux",
+                  "properties": {
+                    "publisher": "Microsoft.EnterpriseCloud.Monitoring",
+                    "type": "OmsAgentForLinux",
+                    "typeHandlerVersion": "1.7",
+                    "autoUpgradeMinorVersion": true,
+                    "settings": {
+                      "workspaceId": "[parameters('logAnalyticsWorkspaceId')]"
+                    },
+                    "protectedSettings": {
+                      "workspaceKey": "[parameters('logAnalyticsWorkspaceKey')]"
+                    }
+                  }
                 }
               ]
             }
-          }
-        }
-      },
-      {
-        "type": "Microsoft.Network/publicIPAddresses",
-        "name": "[variables('publicIPAddressName')]",
-        "location": "[resourceGroup().location]",
-        "apiVersion": "2016-06-01",
-        "properties": {
-          "publicIPAllocationMethod": "Dynamic",
-          "dnsSettings": {
-            "domainNameLabel": "[toLower(parameters('vmssName'))]"
           }
         }
       },
@@ -175,16 +190,14 @@
         "name": "[variables('loadBalancerName')]",
         "location": "[resourceGroup().location]",
         "apiVersion": "2016-06-01",
-        "dependsOn": [
-          "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
-        ],
         "properties": {
           "frontendIPConfigurations": [
             {
               "name": "[variables('loadBalancerFrontEndName')]",
               "properties": {
-                "publicIPAddress": {
-                  "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "[concat(variables('virtualNetworkId'), '/subnets/', parameters('virtualNetworkSubnetName'))]"
                 }
               }
             }
