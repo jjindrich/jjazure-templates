@@ -1,0 +1,68 @@
+{
+	"location": "West Europe",
+	"properties": {
+		"sku": {
+			"name": "Standard"
+		},
+		"EventsOutOfOrderMaxDelayInSeconds": 5,
+		"EventsOutOfOrderPolicy": "Adjust",
+		"inputs": [
+            {
+                "name": "jjadiothub",
+                "properties": {
+                  "type": "Stream",
+                  "datasource": {
+                    "type": "Microsoft.Devices/IotHubs",
+                    "properties": {
+                      "iotHubNamespace": "adiothub",
+                      "SharedAccessPolicyKey": "<KEY>",
+                      "sharedAccessPolicyName": "iothubowner",
+                      "endpoint": "messages/events",
+                      "consumerGroupName": "$Default"
+                    }
+                  },
+                  "compression": {
+                    "type": "None"
+                  },
+                  "serialization": {
+                    "type": "Json",
+                    "properties": {
+                      "encoding": "UTF8"
+                    }
+                  }
+                }
+              }
+		],
+		"transformation": {
+			"name": "ProcessSampleData",
+			"properties": {
+				"streamingUnits": 1,
+				"query": "SELECT
+                *
+            INTO
+                jjaddb
+            FROM
+                jjadiothub"
+			}
+		},
+		"outputs": [
+            {
+                "name": "jjaddb",
+                "properties": {
+                  "datasource": {
+                    "type": "Microsoft.Sql/Server/Database",
+                    "properties": {
+                      "table": "\"ad\".\"DeviceSystemMessage\"",
+                      "maxWriterCount": 1,
+                      "maxBatchCount": 10000,
+                      "server": "jjad-sql.database.windows.net",
+                      "database": "jjaddb",                      
+                      "user": "jj",
+                      "password": "<PASSWORD>"
+                    }
+                  }
+                }
+              }
+		]
+	}
+}
