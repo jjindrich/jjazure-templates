@@ -1,0 +1,19 @@
+rg=vm-encrypted-rg
+l=westeurope
+az group create -n $rg -l $l
+
+## create VM
+vmname=jjvmencrypted
+az vm create -n $vmname -g $rg -l $l --size Standard_DS2_v2 --image UbuntuLTS --admin-username jj
+
+## create KeyVault
+kvname=jjkv
+az keyvault create -n $kvname -g $rg -l $l
+az keyvault update -n $kvname -g $rg --enabled-for-disk-encryption "true"
+
+## encrypt VM
+# https://docs.microsoft.com/en-us/azure/security/azure-security-disk-encryption-linux#-enable-encryption-on-an-existing-or-running-linux-vm-using-azure-cli
+az vm encryption enable -g $rg -n $vmname --disk-encryption-keyvault $kvname --volume-type All
+
+## check status
+az vm encryption show -n $vmname -g $rg
