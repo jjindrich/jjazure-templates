@@ -1,0 +1,48 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "azureFirewallName": {
+            "type": "string"
+        },
+        "virtualNetworkName": {
+            "type": "string"
+        },
+        "subnetName": {
+            "type": "string"
+        },
+        "publicIpAddress": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "networkApiVersion": "?api-version=2019-04-01",
+        "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+        "publicIpId": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIpAddress'))]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2019-04-01",
+            "type": "Microsoft.Network/azureFirewalls",
+            "name": "[parameters('azureFirewallName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "IpConf",
+                        "properties": {
+                            "subnet": {
+                                "id": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[variables('publicIpId')]"
+                            }
+                        }
+                    }
+                ]
+            },
+            "tags": {}
+        }
+    ]
+}
