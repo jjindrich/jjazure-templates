@@ -13,6 +13,9 @@
         },
         "publicIpAddress": {
             "value": "jjdevv2fw-ip"
+        },
+        "routeTablesName": {
+            "value": "jjdevv2fw-rt"
         }
     }
 }

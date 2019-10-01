@@ -13,14 +13,77 @@
         },
         "publicIpAddress": {
             "type": "string"
+        },
+        "routeTablesName": {
+            "type": "String"
         }
     },
     "variables": {
         "networkApiVersion": "?api-version=2019-04-01",
+        "publicIp": "51.105.234.60",
         "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
         "publicIpId": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIpAddress'))]"
     },
     "resources": [
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-07-01",
+            "name": "[parameters('publicIpAddress')]",
+            "location": "westeurope",
+            "tags": {
+                "Account": "Shared"
+            },
+            "sku": {
+                "name": "Standard",
+                "tier": "Regional"
+            },
+            "properties": {
+                "ipAddress": "[variables('publicIp')]",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4,
+                "dnsSettings": {
+                    "domainNameLabel": "jjdevv2fw",
+                    "fqdn": "jjdevv2fw.westeurope.cloudapp.azure.com"
+                },
+                "ipTags": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2019-07-01",
+            "name": "[parameters('routeTablesName')]",
+            "location": "westeurope",
+            "tags": {
+                "Account": "Shared"
+            },
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "toFw",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.3.252.4"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/routeTables/routes",
+            "apiVersion": "2019-07-01",
+            "name": "[concat(parameters('routeTablesName'), '/toFw')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/routeTables', parameters('routeTablesName'))]"
+            ],
+            "properties": {
+                "addressPrefix": "0.0.0.0/0",
+                "nextHopType": "VirtualAppliance",
+                "nextHopIpAddress": "10.3.252.4"
+            }
+        },
         {
             "apiVersion": "2019-04-01",
             "type": "Microsoft.Network/azureFirewalls",
@@ -38,6 +101,155 @@
                             "publicIPAddress": {
                                 "id": "[variables('publicIpId')]"
                             }
+                        }
+                    }
+                ],
+                "networkRuleCollections": [
+                    {
+                        "name": "Console",
+                        "properties": {
+                            "priority": 1000,
+                            "action": {
+                                "type": "Allow"
+                            },
+                            "rules": [
+                                {
+                                    "name": "Rdp",
+                                    "protocols": [
+                                        "TCP"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "destinationAddresses": [
+                                        "*"
+                                    ],
+                                    "destinationPorts": [
+                                        "3389"
+                                    ]
+                                },
+                                {
+                                    "name": "SSH",
+                                    "protocols": [
+                                        "TCP"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ],
+                                    "destinationAddresses": [
+                                        "*"
+                                    ],
+                                    "destinationPorts": [
+                                        "22"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "applicationRuleCollections": [
+                    {
+                        "name": "UpdatesWindows",
+                        "properties": {
+                            "priority": 100,
+                            "action": {
+                                "type": "Allow"
+                            },
+                            "rules": [
+                                {
+                                    "name": "Windows Update",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Http",
+                                            "port": 80
+                                        },
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [
+                                        "WindowsUpdate"
+                                    ],
+                                    "targetFqdns": [],
+                                    "sourceAddresses": []
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "UpdatesLinux",
+                        "properties": {
+                            "priority": 1010,
+                            "action": {
+                                "type": "Allow"
+                            },
+                            "rules": [
+                                {
+                                    "name": "Updates",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Http",
+                                            "port": 80
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "security.ubuntu.com",
+                                        "azure.archive.ubuntu.com",
+                                        "changelogs.ubuntu.com"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "name": "Packages",
+                                    "protocols": [
+                                        {
+                                            "protocolType": "Https",
+                                            "port": 443
+                                        }
+                                    ],
+                                    "fqdnTags": [],
+                                    "targetFqdns": [
+                                        "packages.microsoft.com"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "natRuleCollections": [
+                    {
+                        "name": "RdpServer",
+                        "properties": {
+                            "priority": 1000,
+                            "action": {
+                                "type": "Dnat"
+                            },
+                            "rules": [
+                                {
+                                    "name": "Rdp-jjdevv2addc",
+                                    "protocols": [
+                                        "TCP"
+                                    ],
+                                    "translatedAddress": "10.3.250.10",
+                                    "translatedPort": "3389",
+                                    "sourceAddresses": [
+                                        "[variables('publicIp')]"
+                                    ],
+                                    "destinationAddresses": [
+                                        "[variables('publicIp')]"
+                                    ],
+                                    "destinationPorts": [
+                                        "3389"
+                                    ]
+                                }
+                            ]
                         }
                     }
                 ]
