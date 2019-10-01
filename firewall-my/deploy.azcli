@@ -6,3 +6,4 @@ az network vnet subnet update -g $rg -n DmzWeb --vnet-name JJDevV2Network --rout
 
 az network vnet subnet update -g $rg -n DmzInfra --vnet-name JJDevV2Network --remove routeTable 
 az network vnet subnet update -g $rg -n DmzWeb --vnet-name JJDevV2Network --remove routeTable
+az resource delete -g $rg -n jjdevv2fw --resource-type "Microsoft.Network/azureFirewalls"
