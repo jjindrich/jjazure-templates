@@ -286,7 +286,7 @@
             "name": "[variables('loadBalancerGwFrontEndName')]",
             "properties": {
               "publicIPAddress": {
-                "id": "[resourceId('mall-rg', 'Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIpName'))]"
               }
             }
           }

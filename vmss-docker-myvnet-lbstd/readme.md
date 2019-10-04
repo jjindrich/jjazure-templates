@@ -1,15 +1,16 @@
 # Azure Virtual Machine ScaleSet running Docker container in custom virtual network with Standard Load Balancer
-This script creates VMSS running Docker image stored in Azure Container Registry (ACR) in custom virtual network.
+
+This script creates VMSS running Docker image stored in Azure Container Registry (ACR) in custom virtual network behind Internal Standard Load Balancer.
 
 Using Docker Extension is deprecated ! see https://github.com/Azure/azure-docker-extension/wiki/Deprecation-Notice
 
 We have to use custom script extension to install deploy it.
 
-If you want to use Internal Standard Load Balancer, you have to configure who is traffic to Internet routed. Outbound connectivity must be explicitly declared, check [docs](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-outbound-rules-overview#outbound-nat-for-internal-standard-load-balancer-scenarios).
+If you want to use Internal Standard Load Balancer, you have to configure how is traffic to Internet routed. Outbound connectivity must be explicitly declared, check [docs](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-outbound-rules-overview#outbound-nat-for-internal-standard-load-balancer-scenarios).
 
 You have following options:
 
-- add Public Standard Load Balancer with Outbound rules
+- add Public Standard Load Balancer with Outbound rules (used option)
 - configure routes on virtual network subnet
 
 Script will deploy:
