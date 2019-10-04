@@ -1,4 +1,4 @@
-# Azure Virtual Machine ScaleSet running Docker container in custom virtual network
+# Azure Virtual Machine ScaleSet running Docker container in custom virtual network with Standard Load Balancer
 This script creates VMSS running Docker image stored in Azure Container Registry (ACR) in custom virtual network.
 
 Using Docker Extension is deprecated ! see https://github.com/Azure/azure-docker-extension/wiki/Deprecation-Notice
