@@ -1,0 +1,37 @@
+
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmSku": {
+      "value": "Standard_B2ms"
+    },
+    "vmssName": {
+      "value": "jjvmssdocker"
+    },
+    "instanceCount": {
+      "value": 2
+    },
+    "adminUsername": {
+      "value": "jj"
+    },
+    "adminPassword": {
+      "value": "<PASSWORD>"
+    },
+    "virtualNetworkResourceGroup": {
+      "value": "vnet-central-rg"
+    },
+    "virtualNetworkName": {
+      "value": "jjvnet-central"
+    },
+    "virtualNetworkSubnetName": {
+      "value": "dmz-jump"
+    },
+    "logAnalyticsWorkspaceId": {
+      "value": "<ID>"
+    },
+    "logAnalyticsWorkspaceKey": {
+      "value": "<KEY>"
+    }
+  }
+}
