@@ -1,5 +1,5 @@
 {
-  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "vmSku": {
@@ -45,16 +45,17 @@
     },
     "omsWorkspaceId": {
       "type": "string",
+      "defaultValue": "OMS-ID",
       "metadata": {
         "description": "OMS workspace Id"
       }
     },
-      "omsWorkspaceKey": {
-        "type": "string",
-        "metadata": {
-          "description": "OMS workspace access key"
-        }
-    }    
+    "omsWorkspaceKey": {
+      "type": "string",
+      "metadata": {
+        "description": "OMS workspace access key"
+      }
+    }
   },
   "variables": {
     "namingInfix": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]",
@@ -91,8 +92,8 @@
         "virtualMachineProfile": {
           "storageProfile": {
             "osDisk": {
-		"createOption": "FromImage",
-		"caching": "ReadWrite"
+              "createOption": "FromImage",
+              "caching": "ReadWrite"
             },
             "imageReference": {
               "publisher": "Canonical",
@@ -154,6 +155,7 @@
                 }
               },
               {
+                "condition": "[not(equals(parameters('omsWorkspaceId'), 'OMS-ID'))]",
                 "name": "OmsAgentForLinux",
                 "properties": {
                   "publisher": "Microsoft.EnterpriseCloud.Monitoring",
