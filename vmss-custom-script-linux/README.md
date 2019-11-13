@@ -14,7 +14,9 @@ az group create -l westeurope -n $rg
 ./az-group-deploy.sh -a vmss-custom-script-linux -l westeurope -g $rg
 ```
 
-Deploy directly
+If deployment will fail, use -v parameter.
+
+Deploy directly with script on this repo.
 
 ```
 rg="jjtest-rg"

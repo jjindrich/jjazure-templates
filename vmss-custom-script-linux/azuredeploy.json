@@ -43,6 +43,13 @@
         "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
       }
     },
+    "_artifactsLocationSasToken": {
+      "defaultValue": "",
+      "type": "string",
+      "metadata": {
+        "description": "SAS token to access storage account."
+      }
+    },
     "omsWorkspaceId": {
       "type": "string",
       "defaultValue": "OMS-ID",
@@ -148,14 +155,13 @@
                   "autoUpgradeMinorVersion": true,
                   "settings": {
                     "fileUris": [
-                      "[concat(parameters('_artifactsLocation'), '/scripts/hello.sh')]"
+                      "[concat(parameters('_artifactsLocation'), '/scripts/hello.sh',parameters('_artifactsLocationSasToken'))]"
                     ],
                     "commandToExecute": "sh hello.sh"
                   }
                 }
               },
               {
-                "condition": "[not(equals(parameters('omsWorkspaceId'), 'OMS-ID'))]",
                 "name": "OmsAgentForLinux",
                 "properties": {
                   "publisher": "Microsoft.EnterpriseCloud.Monitoring",
