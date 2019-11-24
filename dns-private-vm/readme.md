@@ -2,6 +2,8 @@
 
 !!! Limitation: Latest Ubuntu is not supported with .local domain
 
+*NOT UPDATED*, use https://docs.microsoft.com/en-us/azure/dns/private-dns-migration-guide
+
 ## Deploy template with DNS
 
 Template deploys Azure DNS privaaz vte zone with A record of db.jjdev.local
