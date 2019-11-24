@@ -1,0 +1,34 @@
+az group create -n jjubuntu18dns-rg -l westeurope
+
+# create network
+az network vnet create -n jjdev-vnet -g jjubuntu18dns-rg --address-prefixes 10.3.0.0/16 
+az network vnet subnet create -n dmz-infra --address-prefixes 10.3.250.0/24 -g jjubuntu18dns-rg --vnet-name jjdev-vnet
+vnetsubnetid=$(az network vnet subnet list --resource-group jjubuntu18dns-rg --vnet-name jjdev-vnet --query "[?name=='dmz-infra'].id" --output tsv)
+
+# create Windows AD with DNS server
+az vm create -n jjwin -g jjubuntu18dns-rg --admin-username jj --admin-password Azure-1234567890 --size Standard_B2ms --image Win2019Datacenter --subnet $vnetsubnetid --private-ip-address 10.3.250.10
+# connect RDP - configure AD with DNS server
+Install-WindowsFeature AD-Domain-Services  -IncludeManagementTools
+Import-Module ADDSDeployment
+Install-ADDSForest `
+-CreateDnsDelegation:$false `
+-DatabasePath "C:\Windows\NTDS" `
+-DomainMode "Win2012R2" `
+-DomainName "jjdev.local" `
+-DomainNetbiosName "jjdev" `
+-ForestMode "Win2012R2" `
+-InstallDns:$true `
+-LogPath "C:\Windows\NTDS" `
+-NoRebootOnCompletion:$false `
+-SysvolPath "C:\Windows\SYSVOL" `
+-Force:$true
+# automatic reboot
+Set-DnsServerForwarder -IPAddress "168.63.129.16" -PassThru
+
+# change virtual network DNS
+az network vnet update -n jjdev-vnet -g jjubuntu18dns-rg --dns-servers 10.3.250.10
+
+# create Ubuntu18
+az vm create -n jjubuntu18 -g jjubuntu18dns-rg --admin-username jj --admin-password Azure-1234567890 --size Standard_B1ms --image UbuntuLTS --subnet $vnetsubnetid
+# connect SSH
+ping jjwin.jjdev.local
