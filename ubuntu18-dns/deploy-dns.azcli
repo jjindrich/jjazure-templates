@@ -32,3 +32,5 @@ az network vnet update -n jjdev-vnet -g jjubuntu18dns-rg --dns-servers 10.3.250.
 az vm create -n jjubuntu18 -g jjubuntu18dns-rg --admin-username jj --admin-password Azure-1234567890 --size Standard_B1ms --image UbuntuLTS --subnet $vnetsubnetid
 # connect SSH
 ping jjwin.jjdev.local
+
+Domain .local is deprecated https://en.m.wikipedia.org/wiki/.local
