@@ -16,6 +16,9 @@
         },
         "routeTablesName": {
             "value": "jjdevv2fw-rt"
+        },
+        "routeTablesNameVpn": {
+            "value": "jjdevv2fw-vpn-rt"
         }
     }
 }

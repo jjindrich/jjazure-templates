@@ -16,6 +16,9 @@
         },
         "routeTablesName": {
             "type": "String"
+        },
+        "routeTablesNameVpn": {
+            "type": "String"
         }
     },
     "variables": {
@@ -46,7 +49,8 @@
                     "domainNameLabel": "jjdevv2fw",
                     "fqdn": "jjdevv2fw.westeurope.cloudapp.azure.com"
                 },
-                "ipTags": []
+                "ipTags": [
+                ]
             }
         },
         {
@@ -67,7 +71,16 @@
                             "nextHopType": "VirtualAppliance",
                             "nextHopIpAddress": "10.3.252.4"
                         }
+                    },
+                    {
+                        "name": "JJDEVBR1toFw",
+                        "properties": {
+                            "addressPrefix": "10.1.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.3.252.4"
+                        }
                     }
+
                 ]
             }
         },
@@ -85,11 +98,56 @@
             }
         },
         {
+            "type": "Microsoft.Network/routeTables/routes",
+            "apiVersion": "2019-07-01",
+            "name": "[concat(parameters('routeTablesName'), '/JJDEVBR1toFw')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/routeTables', parameters('routeTablesName'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.1.0.0/16",
+                "nextHopType": "VirtualAppliance",
+                "nextHopIpAddress": "10.3.252.4"
+            }
+        },
+        {
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2019-07-01",
+            "name": "[parameters('routeTablesNameVpn')]",
+            "location": "westeurope",
+            "tags": {
+                "Account": "Shared"
+            },
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "toFw",
+                        "properties": {
+                            "addressPrefix": "10.3.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.3.252.4"
+                        }
+                    },
+                    {
+                        "name": "toFwApp",
+                        "properties": {
+                            "addressPrefix": "10.4.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.3.252.4"
+                        }
+                    }
+
+                ]
+            }
+        },
+        {
             "apiVersion": "2019-04-01",
             "type": "Microsoft.Network/azureFirewalls",
             "name": "[parameters('azureFirewallName')]",
             "location": "[resourceGroup().location]",
-            "dependsOn": [],
+            "dependsOn": [
+            ],
             "properties": {
                 "ipConfigurations": [
                     {
@@ -171,8 +229,10 @@
                                     "fqdnTags": [
                                         "WindowsUpdate"
                                     ],
-                                    "targetFqdns": [],
-                                    "sourceAddresses": []
+                                    "targetFqdns": [
+                                    ],
+                                    "sourceAddresses": [
+                                    ]
                                 }
                             ]
                         }
@@ -193,7 +253,8 @@
                                             "port": 80
                                         }
                                     ],
-                                    "fqdnTags": [],
+                                    "fqdnTags": [
+                                    ],
                                     "targetFqdns": [
                                         "security.ubuntu.com",
                                         "azure.archive.ubuntu.com",
@@ -211,7 +272,8 @@
                                             "port": 443
                                         }
                                     ],
-                                    "fqdnTags": [],
+                                    "fqdnTags": [
+                                    ],
                                     "targetFqdns": [
                                         "packages.microsoft.com"
                                     ],
@@ -254,7 +316,8 @@
                     }
                 ]
             },
-            "tags": {}
+            "tags": {
+            }
         }
     ]
 }
