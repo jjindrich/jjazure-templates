@@ -65,7 +65,7 @@
                 "disableBgpRoutePropagation": false,
                 "routes": [
                     {
-                        "name": "toFw",
+                        "name": "InternetToFw",
                         "properties": {
                             "addressPrefix": "0.0.0.0/0",
                             "nextHopType": "VirtualAppliance",
@@ -79,35 +79,24 @@
                             "nextHopType": "VirtualAppliance",
                             "nextHopIpAddress": "10.3.252.4"
                         }
+                    },
+                    {
+                        "name": "AppToFw",
+                        "properties": {
+                            "addressPrefix": "10.4.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.3.252.4"
+                        }
+                    },
+                                        {
+                        "name": "HubToFw",
+                        "properties": {
+                            "addressPrefix": "10.3.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.3.252.4"
+                        }
                     }
-
                 ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/routeTables/routes",
-            "apiVersion": "2019-07-01",
-            "name": "[concat(parameters('routeTablesName'), '/toFw')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/routeTables', parameters('routeTablesName'))]"
-            ],
-            "properties": {
-                "addressPrefix": "0.0.0.0/0",
-                "nextHopType": "VirtualAppliance",
-                "nextHopIpAddress": "10.3.252.4"
-            }
-        },
-        {
-            "type": "Microsoft.Network/routeTables/routes",
-            "apiVersion": "2019-07-01",
-            "name": "[concat(parameters('routeTablesName'), '/JJDEVBR1toFw')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/routeTables', parameters('routeTablesName'))]"
-            ],
-            "properties": {
-                "addressPrefix": "10.1.0.0/16",
-                "nextHopType": "VirtualAppliance",
-                "nextHopIpAddress": "10.3.252.4"
             }
         },
         {
@@ -122,7 +111,7 @@
                 "disableBgpRoutePropagation": false,
                 "routes": [
                     {
-                        "name": "toFw",
+                        "name": "HubToFw",
                         "properties": {
                             "addressPrefix": "10.3.0.0/16",
                             "nextHopType": "VirtualAppliance",
@@ -130,7 +119,7 @@
                         }
                     },
                     {
-                        "name": "toFwApp",
+                        "name": "AppToFw",
                         "properties": {
                             "addressPrefix": "10.4.0.0/16",
                             "nextHopType": "VirtualAppliance",
@@ -172,7 +161,7 @@
                             },
                             "rules": [
                                 {
-                                    "name": "Rdp",
+                                    "name": "RDP",
                                     "protocols": [
                                         "TCP"
                                     ],
@@ -199,6 +188,48 @@
                                     ],
                                     "destinationPorts": [
                                         "22"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "Web",
+                        "properties": {
+                            "priority": 1001,
+                            "action": {
+                                "type": "Allow"
+                            },
+                            "rules": [
+                                {
+                                    "name": "HTTPtoApp",
+                                    "protocols": [
+                                        "TCP"
+                                    ],
+                                    "sourceAddresses": [
+                                        "10.3.0.0/16"
+                                    ],
+                                    "destinationAddresses": [
+                                        "10.4.0.0/16"
+                                    ],
+                                    "destinationPorts": [
+                                        "80"
+                                    ]
+                                },
+                                {
+                                    "name": "HTTPtoJJDEVBR1",
+                                    "protocols": [
+                                        "TCP"
+                                    ],
+                                    "sourceAddresses": [
+                                        "10.3.0.0/16",
+                                        "10.4.0.0/16"
+                                    ],
+                                    "destinationAddresses": [
+                                        "10.1.0.0/16"
+                                    ],
+                                    "destinationPorts": [
+                                        "80"
                                     ]
                                 }
                             ]
