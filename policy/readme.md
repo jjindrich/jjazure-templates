@@ -2,7 +2,7 @@
 
 ## Deploy Azure Policy definitions
 
-It deploys Azure Policy definitions with Category Network. 
+It deploys Azure Policy definitions with Category Network.
 Next setup assignment based on you requirements - to subscriptions or management groups.
 
 ```bash
@@ -24,3 +24,11 @@ az policy definition create --name 'audit-storage-fw' \
     --description 'This policy audits any Storage with allowed firewall ip addresses.' \
     --rules 'storage-fw.rules.json' --params 'storage-fw.parameters.json'
 ```
+
+Missing policy for following PaaS services
+
+- Service Bus
+- Container Registry
+- EventHub
+- CosmosDB
+- App Service
