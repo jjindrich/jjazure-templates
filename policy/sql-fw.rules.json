@@ -1,0 +1,20 @@
+{
+  "if": {
+    "allOf": [
+      {
+        "field": "type",
+        "equals": "Microsoft.Sql/servers"
+      }
+    ]
+  },
+  "then": {
+    "effect": "[parameters('effect')]",
+            "details": {
+      "type": "Microsoft.Sql/servers/firewallRules",
+      "existenceCondition": {
+        "field": "Microsoft.Sql/servers/firewallRules/startIpAddress",
+        "exists": "true"
+      }
+    }
+  }
+}

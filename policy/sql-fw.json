@@ -1,0 +1,44 @@
+{
+    "properties": {
+      "displayName": "SQL server should have empty firewall ip addresses",
+      "policyType": "Custom",
+      "mode": "Indexed",
+      "description": "This policy audits any SQL server with allowed firewall ip addresses.",
+      "parameters": {
+        "effect": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Effect",
+            "description": "Enable or disable the execution of the policy"
+          },
+          "allowedValues": [
+            "Audit",
+            "Disabled"
+          ],
+          "defaultValue": "Audit"
+        }
+      },
+      "policyRule": {
+        "if": {
+          "allOf": [
+            {
+              "field": "type",
+              "equals": "Microsoft.Sql/servers"
+            }
+          ]
+        },
+        "then": {
+          "effect": "[parameters('effect')]",
+          "details": {
+            "type": "Microsoft.Sql/servers/firewallRules",
+            "existenceCondition": {
+              "field": "Microsoft.Sql/servers/firewallRules/startIpAddress",
+              "exists": "true"
+            }
+          }
+        }
+      }
+    },
+    "type": "Microsoft.Authorization/policyDefinitions",
+    "name": "audit-sqlserver-fw"
+  }
