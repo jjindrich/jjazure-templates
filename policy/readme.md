@@ -5,6 +5,8 @@
 It deploys Azure Policy definitions with Category Network.
 Next setup assignment based on you requirements - to subscriptions or management groups.
 
+This policy allows you **control public IP configured on Azure PaaS services**.
+
 ```bash
 az policy definition create --name 'audit-sqlserver-fw'  \
     --mode Indexed --metadata 'category=Network' \
