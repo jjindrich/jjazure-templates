@@ -34,3 +34,16 @@ Missing policy for following PaaS services
 - EventHub
 - CosmosDB
 - App Service
+
+## Report audit logs
+
+Configure Activity log Diagnostics settings to send data into Log Analytics. Than run query.
+
+```kusto
+AzureActivity 
+| where Category == 'Policy' and Level != 'Informational' 
+| extend p=todynamic(Properties) 
+| extend policies=todynamic(tostring(p.policies)) 
+| mvexpand policy = policies 
+| where p.isComplianceCheck == 'False'
+```
