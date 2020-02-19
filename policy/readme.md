@@ -60,3 +60,5 @@ AzureActivity
 | summarize count() by bin(TimeGenerated, 1h)
 | render columnchart
 ```
+
+See more on this [link](https://techcommunity.microsoft.com/t5/itops-talk-blog/how-to-create-azure-monitor-alerts-for-non-compliant-azure/ba-p/713466)
