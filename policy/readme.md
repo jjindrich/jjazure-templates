@@ -45,5 +45,18 @@ AzureActivity
 | extend p=todynamic(Properties) 
 | extend policies=todynamic(tostring(p.policies)) 
 | mvexpand policy = policies 
-| where p.isComplianceCheck == 'False'
+//| where p.isComplianceCheck == 'False'
+```
+
+If you want to render chart
+
+```kusto
+AzureActivity
+| where Category == 'Policy' and Level != 'Informational'
+| extend p=todynamic(Properties)
+| extend policies=todynamic(tostring(p.policies))
+| mvexpand policy = policies
+//| where p.isComplianceCheck == 'False'
+| summarize count() by bin(TimeGenerated, 1h)
+| render columnchart
 ```
