@@ -1,0 +1,28 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "prefix": {
+            "type": "string"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-06-01",
+            "name": "storageDeployment",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "id": "[resourceId('jjtemplates-rg', 'Microsoft.Resources/templateSpecs/versions', 'storageSpec', '1.0')]"
+                },
+                "parameters": {
+                    "storageName": {
+                        "value": "[parameters('prefix')]"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}
