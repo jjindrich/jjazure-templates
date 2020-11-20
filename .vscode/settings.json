@@ -1,4 +1,5 @@
 {
     "terminal.integrated.shell.windows": "C:\\WINDOWS\\sysnative\\bash.exe",
-    "terminal.integrated.fontSize": 12
+    "terminal.integrated.fontSize": 12,
+    "powershell.codeFormatting.addWhitespaceAroundPipe": true
 }
