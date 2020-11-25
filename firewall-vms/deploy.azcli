@@ -1,0 +1,4 @@
+rg='JJTest-rg'
+az group create -n $rg --location westeurope
+
+az deployment group create -g $rg --template-file deploy.json --parameters deploy.params.json

@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetName": {
+            "value": "jjtest-vnet"
+        },
+        "azureFirewallName": {
+            "value": "jjtest-fw"
+        },
+        "prefix": {
+            "value": "jjtest"
+        },
+        "adminUsername": {
+            "value": "jj"
+        },
+        "adminPassword": {
+            "value": "Azure-1234567890"
+        }
+    }
+}
