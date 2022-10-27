@@ -1,0 +1,140 @@
+{
+    "mode": "Indexed",
+    "parameters": {
+        "AutoShutdownEnabled": {
+            "type": "String",
+            "allowedValues": [
+                "Enabled",
+                "Disabled"
+            ],
+            "defaultValue": "Enabled"
+        },
+        "AutoShutdownTimeZone": {
+            "type": "String",
+            "metadata": {
+                "displayName": "AutoShutdown TimeZone",
+                "description": null
+            },
+            "defaultValue": "Central Europe Standard Time"
+        },
+        "AutoShutdownHour": {
+            "type": "String",
+            "metadata": {
+                "displayName": "AutoShutdown Hour",
+                "description": null
+            },
+            "defaultValue": "02:00"
+        }
+    },
+    "policyRule": {
+        "if": {
+            "allOf": [
+                {
+                    "field": "type",
+                    "equals": "Microsoft.Compute/virtualMachines"
+                }
+            ]
+        },
+        "then": {
+            "effect": "deployIfNotExists",
+            "details": {
+                "type": "Microsoft.DevTestLab/schedules",
+                "name": "[concat('shutdown-computevm-', field('name'))]",
+                "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                ],
+                "existenceCondition": {
+                    "allOf": [
+                        {
+                            "field": "Microsoft.DevTestLab/schedules/targetResourceId",
+                            "equals": "[field('id')]"
+                        },
+                        {
+                            "field": "Microsoft.DevTestLab/schedules/status",
+                            "equals": "Enabled"
+                        }
+                    ]
+                },
+                "deployment": {
+                    "properties": {
+                        "mode": "incremental",
+                        "parameters": {
+                            "vmName": {
+                                "value": "[field('name')]"
+                            },
+                            "location": {
+                                "value": "[field('location')]"
+                            },
+                            "status": {
+                                "value": "[parameters('AutoShutdownEnabled')]"
+                            },
+                            "shutdownHour": {
+                                "value": "[parameters('AutoShutdownHour')]"
+                            },
+                            "timeZone": {
+                                "value": "[parameters('AutoShutdownTimeZone')]"
+                            }
+                        },
+                        "template": {
+                            "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                            "contentVersion": "1.0.0.0",
+                            "parameters": {
+                                "vmName": {
+                                    "type": "string"
+                                },
+                                "location": {
+                                    "type": "string"
+                                },
+                                "status": {
+                                    "type": "string",
+                                    "allowedValues": [
+                                        "Enabled",
+                                        "Disabled"
+                                    ]
+                                },
+                                "shutdownHour": {
+                                    "type": "string"
+                                },
+                                "timeZone": {
+                                    "type": "string"
+                                }
+                            },
+                            "variables": {
+                                "shutdownHour": "[replace(parameters('shutdownHour'), ':', '')]"
+                            },
+                            "resources": [
+                                {
+                                    "type": "Microsoft.DevTestLab/schedules",
+                                    "apiVersion": "2018-09-15",
+                                    "name": "[concat('shutdown-computevm-', parameters('vmName'))]",
+                                    "location": "[parameters('location')]",
+                                    "properties": {
+                                        "status": "[parameters('status')]",
+                                        "taskType": "ComputeVmShutdownTask",
+                                        "dailyRecurrence": {
+                                            "time": "[variables('shutdownHour')]"
+                                        },
+                                        "timeZoneId": "[parameters('timeZone')]",
+                                        "notificationSettings": {
+                                            "status": "Enabled",
+                                            "timeInMinutes": 30,
+                                            "emailRecipient": "jajindri@microsoft.com",
+                                            "notificationLocale": "en"
+                                        },
+                                        "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+                                    }
+                                }
+                            ],
+                            "outputs": {
+                                "policy": {
+                                    "type": "string",
+                                    "value": "[concat('Autoshutdown configured for VM', parameters('vmName'))]"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
